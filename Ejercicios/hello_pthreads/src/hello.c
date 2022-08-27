@@ -1,9 +1,8 @@
 // Copyright 2021 Fabio Sanabria <fabio.sanabria@ucr.ac.cr> CC-BY 4.0
 
-#include <pthread.h> //
-#include <stdio.h>
-#include <stdlib.h>
-// #include <unistd.h>
+#include <pthread.h> // Library of pthreads
+#include <stdio.h> // Standard input- output header
+#include <stdlib.h> // Standard library
 
 /**
  * @brief Says hello in a different thread than the main one
@@ -22,7 +21,6 @@ int main(void) {
   int error = pthread_create(&thread, /*attr*/ NULL, greet, /*arg*/ NULL);
   if (error == EXIT_SUCCESS) {
     // print "Hello from main thread"
-    // usleep(1);  // indeterminism
     printf("Hello from main thread\n");
     pthread_join(thread, /*value_ptr*/ NULL);
   } else {
