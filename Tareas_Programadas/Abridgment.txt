@@ -1,0 +1,9 @@
+Apartado de las Tareas Programadas de Programación Paralela y Concurrente
+
+Primera Tarea: Goldbach Serial
+
+Segunda Tarea: Por definir
+
+Tercera Tarea: Por definir
+
+Cuarta Tarea: Por definir
