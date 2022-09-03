@@ -1,0 +1,26 @@
+procedure main()
+  // create thread_count as result of converting argv[1] to integer
+  declare childson1;
+  declare childson2;
+
+  pthread_create(childson1, lottery_grandson)
+  pthread_create(childson2, lottery_grandson)
+  
+  declare randonm_number1
+  declare randonm_number2
+  print("Grandma: Give me the numbers")
+  pthread_join(childson1, randonm_number1)
+  pthread_join(childson1, randonm_number2)
+  
+  print(randonm_number1)
+  print(randonm_number2)
+end procedure
+
+procedure lottery_grandson(void)
+  random_num := calloc of size_t
+  declare number_rand := (random_number)
+
+  random_num[0] := number_rand
+
+  return random_num
+end procedure
