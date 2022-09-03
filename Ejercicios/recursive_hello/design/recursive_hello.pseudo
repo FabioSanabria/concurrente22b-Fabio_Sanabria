@@ -1,0 +1,18 @@
+procedure main(argc, argv[])
+// create thread_count as result of converting argv[1] to integer
+number := 2
+create_thread(thread, greet, number) // thread team
+
+print "Hello from main thread"
+
+end procedure
+
+procedure greet(number)
+if number is bigger than 0
+    print "Hello from secondary thread", number
+    // Recursively calls the subroutine
+    pthread_create(thread, greet, (number-1))
+else
+    print "Goodbye from the secondary thread" , number
+endif         
+end procedure
