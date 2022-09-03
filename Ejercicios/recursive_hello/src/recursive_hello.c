@@ -6,7 +6,9 @@
 // #include <unistd.h>
 
 /**
- * @brief ...
+ * @brief Subroutine that greets recursively if the number
+ * if less than 0
+ * 
  */
 void* greet(void* data);
 
@@ -15,7 +17,8 @@ int main(void) {
   // create_thread(greet)
   pthread_t thread;
   size_t number = 2;
-  int error = pthread_create(&thread, /*attr*/ NULL, greet, /*arg*/ (void*)number);
+  int error = pthread_create(&thread, /*attr*/ NULL, greet,
+  /*arg*/ (void*)number);
   if (error == EXIT_SUCCESS) {
     // print "Hello from main thread"
     // usleep(1);  // indeterminism
@@ -31,15 +34,13 @@ int main(void) {
 void* greet(void* data) {
   size_t number = (size_t)data;
 
-  if(number > 0) {
+  if (number > 0) {
     pthread_t thread;
     printf("Hello from secondary thread-> %zu\n", number);
-    pthread_create(&thread, /*attr*/ NULL, greet, 
+    pthread_create(&thread, /*attr*/ NULL, greet,
     /*arg*/ (void*)(number-1));
-    pthread_join(thread, NULL);
-  }
-  else
-  {
+    pthread_join(thread, NULL);  // They will be free recursively
+  } else {
     // print "Hello from secondary thread"
     printf("Goodbye from secondary thread -> %zu\n", number);
   }
