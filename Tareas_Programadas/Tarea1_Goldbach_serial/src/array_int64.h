@@ -1,20 +1,21 @@
-// Goldbach Serial assignment version 1.0 
+// Goldbach Serial assignment version 1.0
 // <fabio.sanabria@ucr.ac.cr>
 // Copyright [2022] <Fabio Andrés Sanabria Valerin>
-//Credits to Jeisson Hidalgo to provide a lot of this code in his list of videos "Taller de C++ a C" 
+// Credits to Jeisson Hidalgo to provide a lot of
+// this code in his list of videos "Taller de C++ a C"
 #ifndef ARRAY_INT64_H
 #define ARRAY_INT64_H
 
-#include <stddef.h> //Defines various variable types and macros
-#include <inttypes.h> //Provide a set of integer types
+#include <stddef.h>  // Defines various variable types and macros
+#include <inttypes.h>  // Provide a set of integer types
 
 /**
  * @brief Struct of an array used for store different types of variables
 */
 typedef struct {
-  size_t capacity; // Capacity of the array
-  size_t count; // The number of elements in the array
-  int64_t* elements; // The elements that can be stored in this array
+  size_t capacity;  // Capacity of the array
+  size_t count;  // The number of elements in the array
+  int64_t* elements;  // The elements that can be stored in this array
 } array_int64_t;
 
 /**

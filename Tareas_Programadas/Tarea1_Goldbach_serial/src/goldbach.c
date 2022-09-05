@@ -182,7 +182,8 @@ void calculate_sums(goldbach_t* goldbach) {
                    goldbach->primes_nums.elements[b]);
                   array_int64_append(&goldbach->sums,
                    goldbach->primes_nums.elements[c]);
-                }array_int64_destroy(&goldbach->primes_nums);
+                }
+                // array_int64_destroy(&goldbach->primes_nums);
               }
             }
           }

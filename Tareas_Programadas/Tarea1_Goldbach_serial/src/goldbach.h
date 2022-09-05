@@ -1,19 +1,20 @@
-// Goldbach Serial assignment version 1.0 
+// Goldbach Serial assignment version 1.0
 // <fabio.sanabria@ucr.ac.cr>
 // Copyright [2022] <Fabio Andrés Sanabria Valerin>
+// Credits to Jeisson Hidalgo
 #ifndef GOLDBACH_H
 #define GOLDBACH_H
 
 /**
  * @brief Struct of an array used for store different types of variables
 */
-typedef struct goldbach goldbach_t; //"Registro opaco"
+typedef struct goldbach goldbach_t;  // "Registro opaco"
 
 /**
  * @brief Constructor
  * @return pointer to a goldbach_t object
 */
-goldbach_t* goldbach_create(void); // Implemented in the .c "Registro opaco"
+goldbach_t* goldbach_create(void);  // Implemented in the .c "Registro opaco"
 
 /**
  * @brief Run all the necesary process to generate the goldbach sums 

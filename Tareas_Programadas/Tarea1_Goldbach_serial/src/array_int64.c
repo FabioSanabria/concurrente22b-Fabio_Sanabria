@@ -1,11 +1,12 @@
-// Goldbach Serial assignment version 1.0 
+// Goldbach Serial assignment version 1.0
 // <fabio.sanabria@ucr.ac.cr>
 // Copyright [2022] <Fabio Andrés Sanabria Valerin>
-// Credits to Jeisson Hidalgo to provide a lot of this code in his list of videos "Taller de C++ a C" 
+// Credits to Jeisson Hidalgo to provide a lot of
+// this code in his list of videos "Taller de C++ a C"
 #include <assert.h>
-#include <stdlib.h> // 
+#include <stdlib.h>
 
-#include "array_int64.h" // Include .h of this .c program
+#include "array_int64.h"  // Include .h of this .c program
 
 /**
  * @brief Increase the array's capacity
@@ -28,7 +29,7 @@ void array_int64_destroy(array_int64_t* array) {
   assert(array);
   array->capacity = 0;
   array->count = 0;
-  free(array->elements); // This also is a pointer so it has to be free btw
+  free(array->elements);
 }
 
 int array_int64_append(array_int64_t* array, int64_t element) {
@@ -47,7 +48,8 @@ int array_int64_increase_capacity(array_int64_t* array) {
   int64_t* new_elements = (int64_t*)
     realloc(array->elements, new_capacity * sizeof(int64_t));
     // We do a realloc to create a new node
-  if (new_elements) {  // At this point we change the capacity and the elements for the new ones
+// At this point we change the capacity and the elements for the new ones
+  if (new_elements) {
     array->capacity = new_capacity;
     array->elements = new_elements;
     return EXIT_SUCCESS;
