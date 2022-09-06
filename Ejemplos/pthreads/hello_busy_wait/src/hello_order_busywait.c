@@ -49,9 +49,10 @@ void* greet(void* data);
  * as much as processors we have, this method has a lot
  * of fprintf if an error ocurred and free al the memory
  * that we use and do the thread_join
- * @param private_data_t data (Will be parsed)
+ 
+ * @param shared_data data
  * 
- * @return NULL
+ * @return error code
  */
 int create_threads(shared_data_t* shared_data);
 
