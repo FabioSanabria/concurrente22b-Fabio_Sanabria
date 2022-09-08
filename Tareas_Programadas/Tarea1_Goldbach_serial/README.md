@@ -55,7 +55,7 @@ Una vez colocado en la carpeta correspondiente, si desea obtener las *sumas de G
     Una vez ingresados deberá digitar las teclas *ctrl+d* para que el programa empiece a procesarlos.  
     Una vez finalizado el proceso podrá ver una salida como esta:  
 
-    ![Marcado 1](/design/salida_programa.png)
+    ![Marcado 1](./design/salida_programa.png)
 
 5. Ingresar una lista de valores:
 
