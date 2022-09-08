@@ -7,7 +7,7 @@
 En el diagrama mostrado a continuación se muestran las distintas decisiones que debe tomar el programa respecto a los números que ingrese el usuario.  
 Se presenta en el diagrama *un número compuesto de al menos dos potencias, un número primo y un número inválido*, esto para ejemplificar con mayor claridad los resultados de las decisiones tomadas de acuerdo al número que reciba el programa:
 
-![Marcado 1](./design/Diagrama_flujo.png)
+![Marcado 1](/design/Diagrama_flujo.png)
 
 ## Diagrama UML secuencial
 
@@ -20,4 +20,4 @@ Se observa al *actor* , quien se encarga de insertar los datos a ser procesados.
 
 En caso de que el número digitado no sea un entero el programa se detendrá. En caso contrario se continuará el proceso hasta mostrar la salida de los datos al usuario.
 
-![Marcado 1](./design/Diagrama_secuencial_UML.png)
+![Marcado 1](/design/Diagrama_secuencial_UML.png)
