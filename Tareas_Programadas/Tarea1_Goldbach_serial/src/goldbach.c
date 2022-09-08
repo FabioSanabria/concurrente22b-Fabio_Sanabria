@@ -124,11 +124,11 @@ void calculate_sums(goldbach_t* goldbach) {
     int64_t cant_sum = 0;  // Variable that saves the cant_sums
     // Change the value to positive if it is negative
     int64_t num = labs(goldbach->values.elements[i]);
+    calculate_primes(goldbach, num);
     if (num > 5) {  // Condition of goldbach
       // it has to be higher than 5
 
       // Calling calculate_primes
-      calculate_primes(goldbach, num);
       // (1,3,5,7) y (6)
       // Search if this can be better
       if (num % 2 == 0) {  // if this is a pair
@@ -194,7 +194,7 @@ void calculate_sums(goldbach_t* goldbach) {
     } else {  // Case if the number is less than 5
       array_int64_append(&goldbach->cant_sum, 0);
     }
-    array_int64_destroy(&goldbach->primes_nums);  // Destroy the primes array
+      array_int64_destroy(&goldbach->primes_nums);  // Destroy the primes array
   }
 }
 
@@ -257,14 +257,14 @@ void goldbach_print(const goldbach_t* goldbach) {
     const int64_t num = goldbach->values.elements[index];  // numero original
     int64_t vabs = labs(goldbach->values.elements[index]);  // valor absoluto
     if (vabs < 6) {  // Convert to positive
-      printf("%"PRId64 " : NA\n", num);
+      printf("%"PRId64 ": NA\n", num);
     } else if (num > 0) {  // if is positive
       if (num % 2 == 0) {  // pair
         int sums_index = 0;  // Index that marks the limit
         // of the sums of a determinated element
         sums_index = 2 * goldbach->cant_sum.elements[index];
         // print the cant_sums pair
-        printf("%"PRId64 " -> cantidad de sums: %" PRId64 "\n", num,
+        printf("%"PRId64 ": %"PRId64 " sums\n", num,  // cant
          goldbach->cant_sum.elements[index]);
         pointer = pointer + sums_index;
       } else {  // odd
@@ -272,14 +272,14 @@ void goldbach_print(const goldbach_t* goldbach) {
         // multiply by 3 because of the formula
         sums_index = 3 * goldbach->cant_sum.elements[index];
         // print the cant_sums pair
-        printf("%"PRId64 " -> cantidad de sums: %" PRId64 "\n", num,
+        printf("%"PRId64 ": %"PRId64 " sums\n", num,  // cant
          goldbach->cant_sum.elements[index]);
         pointer = pointer + sums_index;
       }
     } else {  // negative
       if (num % 2 == 0) {  // pair
       // print the cant_sums pair
-        printf("%"PRId64 " -> cantidad de sums: %" PRId64 "\nsums : ", num,
+        printf("%"PRId64 ": %"PRId64 " sums: ", num,
           goldbach->cant_sum.elements[index]);
         for (int i = 0; i < goldbach->cant_sum.elements[index]; i++) {
           printf("%" PRId64 " + %" PRId64,
@@ -296,7 +296,7 @@ void goldbach_print(const goldbach_t* goldbach) {
         }
       } else {  // odd
       // print the cant_sums odd
-        printf("%"PRId64 " -> cantidad de sums: %" PRId64 "\nsums : ", num,
+        printf("%"PRId64 ": %"PRId64 " sums: ", num,  // cant 
         goldbach->cant_sum.elements[index]);
         for (int i = 0; i < goldbach->cant_sum.elements[index]; i++) {
           printf("%" PRId64 " + %" PRId64 " + %" PRId64 ,
