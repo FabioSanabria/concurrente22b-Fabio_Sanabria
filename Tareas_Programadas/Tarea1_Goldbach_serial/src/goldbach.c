@@ -296,7 +296,7 @@ void goldbach_print(const goldbach_t* goldbach) {
         }
       } else {  // odd
       // print the cant_sums odd
-        printf("%"PRId64 ": %"PRId64 " sums: ", num,  // cant 
+        printf("%"PRId64 ": %"PRId64 " sums: ", num,  // cant
         goldbach->cant_sum.elements[index]);
         for (int i = 0; i < goldbach->cant_sum.elements[index]; i++) {
           printf("%" PRId64 " + %" PRId64 " + %" PRId64 ,
