@@ -10,3 +10,11 @@ Modifique el programa de ***"hola mundo"*** para que cada hilo de ejecución sal
 `Hello from secondary thread 3 of 4`
 
 Indague en la ***especificación*** cómo obtener el número de CPUs disponibles con OpenMP o bien, la cantidad sugerida de hilos a crear en una región paralela.
+
+### Ejercicio 9
+
+Utilizando los argumentos en línea de comandos, ubique la cantidad máxima de threads que su sistema operativo le permite crear. Escriba el número obtenido en un archivo readme.ext en su carpeta `ejemplos/pthreads/hello_iw_pri`, junto con el nombre de su sistema operativo ***(por ejemplo, Debian 10 64bits o Fedora 30 64bits)***.
+
+**Cantidad de hilos que puede fabricar mi maquina virtual:**
+
+`[UBUNTU 63048 64bits]`
