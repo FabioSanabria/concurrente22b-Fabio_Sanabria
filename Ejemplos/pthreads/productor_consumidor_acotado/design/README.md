@@ -32,17 +32,29 @@ Una vez que el consumidor extrae un producto del buffer imprime en la salida est
 En el siguiente ejemplo de ejecución, los entes hacen dos rondas llenando y consumiendo un buffer de 3 elementos. El productor es rápido y tarda máximo 100ms creando un producto. El consumidor es más lento y podría tardar máximo 750ms consumiendo un producto. Como se puede ver en la salida, el productor rápidamente llena el buffer y debe esperar a que el consumidor libere espacio en el buffer para continuar produciendo. En la salida se comprueba que el consumidor procesa todos los datos generados por el productor y en el mismo orden.
 
 `$ ./producer_consumer 3 2 0 100 0 750`
+
 `Produced 1`
+
 `Produced 2`
+
 `Produced 3`
+
 `		Consuming 1`
+
 `Produced 4`
+
 `	    Consuming 2`
+
 `Produced 5`
+
 `		Consuming 3`
+
 `		Consuming 4`
+
 `		Consuming 5`
+
 `Produced 6`
+
 `		Consuming 6`
 
 *** Utilizar el codigo propuesto por Jeisson para lograr realizar de manera efectiva el trabajo ***
