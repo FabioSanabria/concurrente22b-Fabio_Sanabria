@@ -1,0 +1,34 @@
+procedure main(argc, argv[])
+  // create thread_count as result of converting argv[1] to integer
+  if the number is odd
+  declare thread_count := integer(argv[1])
+  else {
+    send_error
+  }
+
+  for thread_number := 0 to thread_count do
+    create_thread(bulletLaunch1, thread_number, thread_count)  // thread team
+    create_thread(bulletLaunch2, thread_number, thread_count)  // thread team
+  end for
+
+  declare player1 inicitialize has memory in the heap
+  declare player2 inicitialize has memory in the heap
+
+  for thread_number := 0 to thread_count do
+    pthread_join(thread_number, player1)  // thread team
+    pthread_join(thread_number, player2)
+    if player1 is bigger than player2
+    increase points of team 1
+    else {
+        increase points of team 2
+    }
+
+    if points of team 1 is bigger than team 2
+    print("team 1 wins with his points")
+    else 
+    print("team 2 wins with his points")
+end procedure
+
+procedure bulletLaunch1(thread_number, thread_count)
+  print "Hello from secondary thread", thread_number, " of ", thread_count
+end procedure
