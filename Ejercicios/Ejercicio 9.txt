@@ -1,0 +1,7 @@
+Ejercicio 9
+
+En el README.md del ejemplo "hello_w" se encuentra la cantidad de hilos que puede crear mi máquina
+
+Pero por si acaso la subo aquí también
+
+[UBUNTU 63048 64bits]
