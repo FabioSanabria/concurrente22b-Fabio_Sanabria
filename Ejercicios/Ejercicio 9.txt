@@ -1,3 +1,0 @@
-En el README.md del ejemplo hello_w se encuentra la cantidad de hilos que mi maquina puede crear pero por si acaso lo subo aquí
-
-[UBUNTU 63048 64bits]
