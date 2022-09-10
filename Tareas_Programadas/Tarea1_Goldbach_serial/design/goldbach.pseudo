@@ -68,7 +68,7 @@ procedure calculate_sums(calculate_primes(), number)
     return sums
 end procedure
 
-procedure imprimir_sumas(register goldbach)
+procedure print_sums(register goldbach)
     while (goldbach values isn't NULL) { do
         if(the number is positive) {
             if (the number is pair) {
