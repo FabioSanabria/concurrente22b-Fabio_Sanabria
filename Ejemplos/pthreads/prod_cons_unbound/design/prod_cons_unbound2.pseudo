@@ -1,0 +1,86 @@
+procedure main(argc, argv[]):
+  if argc = 8 then  // Arguments in the line commands
+  shared unit_count := integer(argv[1])  // Number of units
+  shared producer_count := integer(argv[2])  // Number of producers
+  shared consumer_count := integer(argv[3])  // Number of consumers
+  shared producer_min_delay := integer(argv[4])  // Min of time that the producer waits
+  shared producer_max_delay := integer(argv[5])  // Max of time that the producer waits
+  shared consumer_min_delay := integer(argv[6])  // Min of time that the consumer waits
+  shared consumer_max_delay := integer(argv[7])  // Max of time that the consumer waits
+
+    shared queue := create_integer_queue()  // Create a shared queue
+    shared can_access_queue := create_mutex()  // Create the mutex that says if we can use the queue
+
+    shared next_unit := 0  // The next unit that we produce and later wants to consume
+    shared can_access_next_unit := create_mutex()  // Create the mutex that says if we can use the next unit 
+
+    shared can_consume := create_semaphore(0)  // Semaphore that his function is the comunication with consume
+    // The number of producers
+    declare producers := create_threads(producer_count, produce1)
+    // The number of consumers
+    declare consumers := create_threads(consumer_count, consume)
+
+    // Wait for all the threads
+    join_threads(producers)
+
+    // This cycle increase the semaphore
+    // of can_consume to wait for the
+    // producers, this is the only
+    // thing that is different between
+    // the prod1 and 2
+    for index := 0 to consumer_count do
+      signal(can_consume)
+    end for
+
+    join_threads(consumers)
+  end if
+end procedure
+
+// Same thing of produce1
+procedure produce1:
+  while true do
+    declare my_unit := 0
+    lock(can_access_next_unit)
+      if next_unit < unit_count then
+        next_unit := next_unit + 1
+        my_unit := next_unit
+      else
+        unlock(can_access_next_unit)
+        break while
+      end if
+    unlock(can_access_next_unit)
+  
+    delay(random_between(producer_min_delay, producer_max_delay))
+    lock(can_access_queue)
+      enqueue(queue, my_unit)
+    unlock(can_access_queue)
+    print("Produced ", my_unit)
+    signal(can_consume)
+  end while
+end procedure
+
+// At this time we change the code of
+// consume2, we insert a wait
+// that control the speed of consume
+// of the consumers, the signal was 
+// added before in the producers
+// method and then we add a mutex that
+// control the queue access to avoid 
+// data race
+procedure consume2:
+  while true do
+    wait(can_consume)
+    lock(can_access_queue)
+      if is_empty(queue) then
+        break while
+      end if
+    declare my_unit := dequeue(queue)
+    unlock(can_access_queue)
+    print("\tConsuming ", my_unit)
+    delay(random_between(consumer_min_delay, consumer_max_delay))
+  end while
+end procedure
+
+function random_between(min, max):
+  return min + rand() % (max - min)
+end function

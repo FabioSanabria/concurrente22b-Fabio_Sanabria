@@ -1,0 +1,90 @@
+procedure main(argc, argv[]):
+if argc = 8 then // Arguments of the command line
+shared unit_count := integer(argv[1])  // Number of units
+shared producer_count := integer(argv[2])  // Number of producers
+shared consumer_count := integer(argv[3])  // Number of consumers
+shared producer_min_delay := integer(argv[4])  // Min of time that the producer waits
+shared producer_max_delay := integer(argv[5])  // Max of time that the producer waits
+shared consumer_min_delay := integer(argv[6])  // Min of time that the consumer waits
+shared consumer_max_delay := integer(argv[7])  // Max of time that the consumer waits
+
+shared queue := create_integer_queue()  // Create a shared queue
+shared can_access_queue := create_mutex()  // Create the mutex that says if we can use the queue
+
+shared next_unit := 0  // The next unit that we produce and later wants to consume
+shared can_access_next_unit := create_mutex()  // Create the mutex that says if we can use the next unit 
+
+shared consumed_count := 0  // Counter of the amount of products consumed
+shared can_access_consumed_count := create_mutex()  // Create the mutex that says if we can consume
+
+// A semaphore that is funtion is the communication betweeen
+// the producers and the consumers
+shared can_consume := create_semaphore(0)
+
+// The number of producers
+declare producers := create_threads(producer_count, produce0)
+// The number of consumers
+declare consumers := create_threads(consumer_count, consume_busywait)
+
+// Wait for all the threads
+join_threads(producers)
+join_threads(consumers)
+  end if
+end procedure
+
+// Method of produce vesion 1
+procedure produce1:
+// In this case, we use an infinite cylce that iterates
+  // by a condition, if this condition is
+  // activated (in this case is if there is
+  // no next_unit) we break the cycle  we use a infinite c
+  while true do
+    declare my_unit := 0
+    lock(can_access_next_unit)
+      if next_unit < unit_count then
+        next_unit := next_unit + 1  // Increase the unit
+        my_unit := next_unit
+      else
+        unlock(can_access_next_unit)  // Realease the mutex
+        break while
+      end if
+    unlock(can_access_next_unit)
+    // Get random numbers to delay  
+    delay(random_between(producer_min_delay, producer_max_delay))
+    lock(can_access_queue)  // Lock to avoid the data race of enqueue in the same place
+      enqueue(queue, my_unit)
+    unlock(can_access_queue)
+    print("Produced ", my_unit)
+    signal(can_consume)  // THis is a semaphore that indicates 
+    // to the consumer if he can consume
+  end while
+end procedure
+
+// Thats the same thing of 
+// consume0, this is the only method
+// that doesnt change in all the pseudo
+// codes
+procedure consume1:
+  while true do
+    lock(can_access_consumed_count)
+      if consumed_count < unit_count then
+        consumed_count := consumed_count + 1
+      else
+        unlock(can_access_consumed_count)
+        break while
+      end if
+    unlock(can_access_consumed_count)
+
+    wait(can_consume)
+    lock(can_access_queue)
+      declare my_unit := dequeue(queue)
+    unlock(can_access_queue)
+    print("\tConsuming ", my_unit)
+    delay(random_between(consumer_min_delay, consumer_max_delay))
+  end while
+end procedure
+
+// Random subroutine
+function random_between(min, max):
+  return min + rand() % (max - min)
+end function
