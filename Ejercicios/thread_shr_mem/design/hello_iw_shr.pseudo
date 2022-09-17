@@ -1,0 +1,15 @@
+procedure main(argc, argv[])
+  // create thread_count as result of converting argv[1] to integer
+  shared thread_count := integer(argv[1])
+
+  for thread_number := 0 to thread_count do
+    private_data add -> thread_number and shared_thread_count
+    create_thread(greet, private_data) // thread team
+  end for
+  print "Hello from main thread"
+end procedure
+
+procedure greet(private_data)
+  private_data <- thread_number and thread_count
+  print "Hello from secondary thread", thread_number, " of ", thread_count
+end procedure
