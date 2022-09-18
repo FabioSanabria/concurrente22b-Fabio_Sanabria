@@ -1,0 +1,24 @@
+// main thread
+procedure main(argc, argv[])
+  shared next_thread := 0
+  shared thread_count := integer(argv[1])
+  delay := integer(argv[2])
+  for thread_number := 0 to thread_count do
+    create_thread(greet, thread_number) // thread team
+  end for
+  print "Hello from main thread"
+end procedure
+
+// Recreate a busy-wait
+procedure greet(thread_number)
+  // Wait until it is my turn
+  // busy wait with a sleep
+  while next_thread < thread_number do
+    sleep(delay)
+  end while
+
+  print "Hello from secondary thread", thread_number, " of ", thread_count
+
+  // Allow subsequent thread to do the task
+  next_thread := next_thread + 1
+end procedure
