@@ -61,4 +61,8 @@ Sugerencia: si hay varios compañeros(as) trabajando el mismo ejercicio en el la
 
 **Cree una gráfica donde el eje-x son las duraciones dadas por argumento al programa. El eje-y son los tiempos de ejecución de los programas. El gráfico tendrá dos series, una para la espera constante y otra para la espera pseudoaleatoria.**
 
+![Marcado 1](../design/Grafica_tiempos.jpg)
+
 Agregue la gráfica al **readme.md** del ejercicio y una discusión de a lo sumo dos párrafos. Indique cuál fue el mejor tiempo máximo de espera obtenido y los efectos de disminuir o incrementarlo. Conjeture y trate de explicar por qué ocurre este comportamiento. Finalmente indique si la espera activa con retraso es una solución óptima, y en caso negativo, provea una idea que pueda lograr este ideal.
+
+*** La discusion sobre si esta solucion es optima o no esta en el inicio del readme, con respecto a los mejores tiempos estos iban variando dependiendo de la cantidad de delay que hubo uno de mas decentes fue de 2356 segundos y el peor no se sabe con exactitud puesto que duro mas de 2 horas ejecutando el programa y se decidio cerrarlo, por lo que se puede concluir de que los efectos de incrementar el tiempo de delay son muy inefiecientes puesto que dura mucho realizar dicha tarea, por otra parte si se decide utlizar tiempos de delay muy cortos, la maquina puede llegar al 100% de potencia provocando que cierre todo lo que se tenga abierto en la maquina o que se estrope del todo ***
