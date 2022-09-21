@@ -1,0 +1,27 @@
+procedure main(argc, argv[])
+  shared thread_hits := 0
+  shared can_access_hits := create_mutex() // Create mutex
+  shared thread_count := integer(argv[1])
+  for thread_number := 0 to thread_count do
+    create_thread(strike_pinata, thread_number) // thread team
+  end for
+  print "Hello from main thread"
+end procedure
+
+procedure strike_pinata(thread_number)
+  // Begin of the mutex
+  lock(can_access_hits)
+  // Al this code is serial because is inside of 
+  // the mutex
+  random_number := random_method() // Increase position
+  declare my_hits := random_number  // Declare private position
+  if thread hits hard do 
+    print "Thread", thread_number, "/", thread_count, 
+    "destroy the pinata"
+  end
+  print "Thread ", thread_number, "/", thread_count ": hits the pinata ",
+    my_hits
+
+  unlock(can_access_hits)
+  // End of the mutex
+end procedure
