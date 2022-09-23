@@ -9,13 +9,24 @@
 #include <stddef.h>  // Defines various variable types and macros
 #include <inttypes.h>  // Provide a set of integer types
 
-/**
- * @brief Struct of an array used for store different types of variables
-*/
+#include "array_num64.h"
+// Nuevo struct, este va a ser el arreglo mas importante
+// va a ser el goldbach y va a contener el valor, y los arreglos
+// de primos y sumas, la cantidad ya no es necesaria ser de arreglos
+// pero se podria crear una para imprimir todas las cantidades al final
+// DOcumentar con doxygen
+typedef struct goldbach_array {
+  int64_t value;
+  int64_t cant_sum;
+  array_sum_t array_sum;
+  array_primos_t array_primos;
+} goldbach_t;
+
+// Este struct practicamente va a llamar al goldbach
 typedef struct {
   size_t capacity;  // Capacity of the array
   size_t count;  // The number of elements in the array
-  int64_t* elements;  // The elements that can be stored in this array
+  goldbach_t* elements;  // The elements that can be stored in this array
 } array_int64_t;
 
 /**
