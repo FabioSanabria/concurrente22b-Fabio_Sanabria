@@ -58,8 +58,8 @@ int get_numbers(goldbach_t* goldbach, FILE* file);
  * @return An error code, EXIT_SUCCESS if the code run correctly or 
  * EXIT_FAILURE if the code fails in this method
 */
-int goldbach_analyze_arguments(goldbach_t* goldbach, int argc
-  , char* argv[]);
+int goldbach_recibir_datos(array_int64_t *array, FILE *file, int argc,
+char* argv[]);
 
 /**
  * @brief Calculates the prime numbers that are before the entered number
@@ -68,7 +68,7 @@ int goldbach_analyze_arguments(goldbach_t* goldbach, int argc
  * @param num Number that the user wants to see his goldbach sum
  * @return void
 */
-void calculate_primes(goldbach_t* goldbach, int num);
+int calcular_primos(array_primos_t* array_primos, int64_t num);
 
 /**
  * @brief Calculates all the goldbach sums, save the amount of sums in a variable 
@@ -112,23 +112,25 @@ void goldbach_destroy(goldbach_t* goldbach) {
   free(goldbach);
 }
 
-void calculate_primes(goldbach_t* goldbach, int num) {
-  assert(goldbach);
-  array_int64_init(&goldbach->primes_nums);
-  // Method that search the prime numbers before a number chose by a user
-      for (int m = 1; m < num; m++) {  // Cycle that sees all the numbers
+// Primer subrutina cambiada, se le pasa un array de primos
+// y el numero
+int calcular_primos(array_primos_t* array_primos, int64_t num) {
+    int cont2 = 0;
+  // inicio subrutina que busca los primos y los mete en un array
+      for (int m = 1; m < num; m++) {  // crea los numeros a ser probados
         int contador = 0;
-        for (int j = m; j > 0; j--) {  // Cycle that sees if the number is prime
-          if (m % j == 0) {
+        for (int j = m; j > 0; j--) {  // revisa si es un numero primo
+          if (m % j == 0) {  // si es primo entra e incrementa el contador
             contador++;
           }
         }
         if (contador == 2) {
-          array_int64_append(&goldbach->primes_nums, m);
-          // add the number into the prime array
+          array_primos_append(array_primos, m);
+          cont2++;  // La cantidad de primos
         }
       }
-      // END of calculate
+      // fin de subrutina
+  return cont2;
 }
 
 void calculate_sums(goldbach_t* goldbach) {
@@ -211,9 +213,10 @@ void calculate_sums(goldbach_t* goldbach) {
   }
 }
 
-int goldbach_run(goldbach_t* goldbach, int argc, char* argv[]) {
+void goldbach_run(array_int64_t* goldbach, size_t thread_count, int argc,
+ char* argv[]) {
   // Sees if the argumets are correct to use
-  int error = goldbach_analyze_arguments(goldbach, argc, argv);
+  int error = goldbach_recibir_datos(goldbach, stdin, argc, argv);
   if (error == EXIT_SUCCESS) {
     get_numbers(goldbach, stdin);
   }
@@ -229,20 +232,23 @@ int goldbach_run(goldbach_t* goldbach, int argc, char* argv[]) {
   return error;
 }
 
-int goldbach_analyze_arguments(goldbach_t* goldbach, int argc
-  , char* argv[]) {  // analize the arguments
-  assert(goldbach);
-  int error = EXIT_SUCCESS;
-  //  Control if the input is not
-  // a number
-  for (int index = 1; index < argc; ++index) {
-    if (!(isdigit(*argv[index]))) {
-      error = EXIT_FAILURE;
-    } else {
-      error = EXIT_SUCCESS;
-    }
+int goldbach_recibir_datos(array_int64_t *array, FILE *file, int argc,
+  char* argv[]) { // analize the arguments
+
+  assert(array);
+  assert(file);
+  if (argc < 0 && argv[1]) {  // Revisa si hay argumentos
+    printf("no hay argumentos");
   }
-  return error;
+  // Le pide amablemente al usuario que meta numeros :3
+  printf("Ingrese los numeros que desea procesar\n");
+  int64_t value = 0;
+  int contador = 0;
+  while (fscanf(file, "%" PRId64, &value) == 1) {
+    ++contador;
+    array_int64_append(array, value);
+  }
+  return contador;
 }
 
 int get_numbers(goldbach_t* goldbach, FILE* file) {
