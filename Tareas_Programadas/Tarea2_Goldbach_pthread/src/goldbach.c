@@ -2,15 +2,19 @@
 // <fabio.sanabria@ucr.ac.cr>
 // Copyright [2022] <Fabio Andrés Sanabria Valerin>
 #include <assert.h>
+#include <ctype.h>
+#include <inttypes.h>
+#include <math.h>
+#include <pthread.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
-#include <errno.h>
-#include <ctype.h>
 #include <time.h>
+#include <unistd.h>
 #include "array_int64.h"
+#include "array_num64.h"
 #include "goldbach.h"
 
 // Structs utilizados para los hilos
@@ -26,6 +30,8 @@ typedef struct shared {
 typedef struct private {
   uint64_t thread_number;
   shared_data_t* shared_data;
+  size_t start;
+  size_t finish;
 } private_data_t;
 
 //------------------------------------------------------------
@@ -40,15 +46,13 @@ typedef struct private {
 
 
 /**
- * @brief Get the numbers of the standard input to realize the goldbach sums 
- * and take the test cases of the file (< test/test-small or < test/test-medium)
- * (Pruebas de Caja Negra vistas en el video de Jeisson)
- * @param goldbach Pointer to a goldbach object
- * @param file Pointer to the test cases (Files)
- * @return An error code, EXIT_SUCCESS if the code run correctly or 
- * EXIT_FAILURE if the code fails in this method
+ * @brief Calculates the prime numbers that are before the entered number
+ *  and adds them in an array
+ * @param goldbach Ponter to a goldbach object
+ * @param num Number that the user wants to see his goldbach sum
+ * @return void
 */
-int get_numbers(goldbach_t* goldbach, FILE* file);
+int calcular_primos(array_primos_t* array_primos, int64_t num);
 
 /**
  * @brief Take the arguments of the terminal and analyze if argc and argv are valid
@@ -61,14 +65,8 @@ int get_numbers(goldbach_t* goldbach, FILE* file);
 int goldbach_recibir_datos(array_int64_t *array, FILE *file, int argc,
 char* argv[]);
 
-/**
- * @brief Calculates the prime numbers that are before the entered number
- *  and adds them in an array
- * @param goldbach Ponter to a goldbach object
- * @param num Number that the user wants to see his goldbach sum
- * @return void
-*/
-int calcular_primos(array_primos_t* array_primos, int64_t num);
+
+int create_threads(shared_data_t *shared_data, size_t task_amount);
 
 /**
  * @brief Calculates all the goldbach sums, save the amount of sums in a variable 
@@ -216,19 +214,60 @@ void calculate_sums(goldbach_t* goldbach) {
 void goldbach_run(array_int64_t* goldbach, size_t thread_count, int argc,
  char* argv[]) {
   // Sees if the argumets are correct to use
-  int error = goldbach_recibir_datos(goldbach, stdin, argc, argv);
-  if (error == EXIT_SUCCESS) {
-    get_numbers(goldbach, stdin);
-  }
+  size_t cant_nums = goldbach_recibir_datos(goldbach, stdin, argc, argv);
   double time_spent = 0;
-  clock_t begin = clock();  // get the time
-  if (error == EXIT_SUCCESS) {
-    calculate_sums(goldbach);  // Calling all the subrutines
-    goldbach_print(goldbach);
+  clock_t begin = clock();
+  shared_data_t *shared_data = (shared_data_t *)
+  calloc(1, sizeof(shared_data_t));
+  if (shared_data) {
+    shared_data->thread_count = thread_count;
+    shared_data->array = goldbach;
+    // Llama a todo
+    create_threads(shared_data, cant_nums);
+    free(shared_data);  // LIbera datos
   }
-  clock_t end = clock();  // To prove how inefficent is the algorithm :(
-  time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
-  printf("Tiempo: %f segundos\n", time_spent);
+
+  // Aqui va la parte pa imprimir, pensar en como se hace
+}
+
+uint64_t minimo(uint64_t a, uint64_t b) {
+  return ( ( ( a) < ( b)) ? ( a) : ( b));
+}
+
+size_t formula_bloque(int i, int D, int w) {
+  // i = thread_number, D = cant_sums, w = thread_count
+  return i*(int)floor(D/w)+minimo(i, D%w);
+}
+
+int create_threads(shared_data_t *shared_data, size_t task_amount) {
+  int error = EXIT_SUCCESS;
+  pthread_t *threads = (pthread_t *)
+    malloc(shared_data->thread_count * sizeof(pthread_t));
+  private_data_t *private_data = (private_data_t *)
+    calloc(shared_data->thread_count, sizeof(private_data_t));
+
+  if (threads && private_data) {
+    for (uint64_t thread_number = 0; thread_number < shared_data->thread_count;
+    ++thread_number) {
+      // D = 10 sumas, w = 4
+      private_data[thread_number].thread_number = thread_number;
+      private_data[thread_number].shared_data = shared_data;
+      private_data[thread_number].start = formula_bloque(thread_number,
+      task_amount, shared_data->thread_count);
+      private_data[thread_number].finish = formula_bloque(thread_number+1,
+      task_amount, shared_data->thread_count);
+      error = pthread_create(&threads[thread_number], /*attr*/ NULL,
+      asignar_thread, /*arg*/ &private_data[thread_number]);
+    }
+
+    for (uint64_t thread_number = 0; thread_number < shared_data->thread_count;
+    ++thread_number) {
+      pthread_join(threads[thread_number], /*value_ptr*/ NULL);
+    }
+
+    free(private_data);
+    free(threads);
+  }
   return error;
 }
 
@@ -251,24 +290,15 @@ int goldbach_recibir_datos(array_int64_t *array, FILE *file, int argc,
   return contador;
 }
 
-int get_numbers(goldbach_t* goldbach, FILE* file) {
-  assert(goldbach);
-  assert(file);
-  int error = EXIT_SUCCESS;
+void* asignar_thread(void* data) {
+  private_data_t* private_data = (private_data_t*) data;
+  shared_data_t* shared_data = private_data->shared_data;
 
-  int64_t value = 0;  // data entered by the user
-  while (fscanf(file, "%"SCNd64, &value) == 1) {  // If the data isn't a number,
-  // exit the program
-    // add all the data to an array of values
-    error = array_int64_append(&goldbach->values, value);
-    if (error) {  // if there is an error reading
-      printf("There was an error in reading");
-      break;
-    }
+  for ( size_t i = private_data->start; i < private_data->finish; i++ ) {
+    // Metodo de calcular sumas para cada elemento, implementar
   }
-  return error;
+  return NULL;
 }
-
 void goldbach_print(const goldbach_t* goldbach) {
   assert(goldbach);
   int pointer = 0;  // Amount of spaces to move in sums
