@@ -35,7 +35,7 @@ typedef struct {
  * @return An error code, EXIT_SUCCESS if the code run correctly or 
  * EXIT_FAILURE if the code fails in this method
 */
-int array_int64_init(array_int64_t* array);
+void array_int64_init(array_int64_t* array);
 
 /**
  * @brief Destructor

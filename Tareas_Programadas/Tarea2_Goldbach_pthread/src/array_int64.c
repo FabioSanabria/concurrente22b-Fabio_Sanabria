@@ -1,59 +1,59 @@
-// Goldbach Serial assignment version 1.0
+// Goldbach_pthread program v1.3 Fabio Sanabria Valerin
 // <fabio.sanabria@ucr.ac.cr>
-// Copyright [2022] <Fabio Andrés Sanabria Valerin>
-// Credits to Jeisson Hidalgo to provide a lot of
-// this code in his list of videos "Taller de C++ a C"
+// Copyright [2022] <Fabio Sanabria Valerin>
 #include <assert.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
-#include "array_int64.h"  // Include .h of this .c program
+#include "array_int64.h"
+#include "array_num64.h"
 
-/**
- * @brief Increase the array's capacity
- * @param array Pointer to an array to simulate the dinamic arrays in c++
- * @return An error code, EXIT_SUCCESS if the code run correctly or 
- * EXIT_FAILURE if the code fails in this method
-*/
-int array_int64_increase_capacity(array_int64_t* array);
+int goldbach_increase_capacity(array_int64_t *array);
 
-int array_int64_init(array_int64_t* array) {
-  assert(array);
+void array_int64_init(array_int64_t *array) {
   array->capacity = 0;
   array->count = 0;
   array->elements = NULL;
-  return EXIT_SUCCESS;
 }
 
-void array_int64_destroy(array_int64_t* array) {
-  // Free memory to avoid memory leaks
-  assert(array);
+void array_int64_destroy(array_int64_t *array) {
+  for (size_t i = 0; i < array->count; i++) {
+    sumas_value_destroy(&array->elements[i].array_sum);
+    array_primos_destroy(&array->elements[i].array_primos);
+  }
+  // se libera memoria
   array->capacity = 0;
   array->count = 0;
   free(array->elements);
+  array->elements = NULL;
 }
 
-int array_int64_append(array_int64_t* array, int64_t element) {
-  assert(array);
+int array_int64_append(array_int64_t *array, int64_t num) {
+  int error = EXIT_SUCCESS;
   if (array->count == array->capacity) {
-    if (array_int64_increase_capacity(array) != EXIT_SUCCESS) {
-      return EXIT_FAILURE;
-    }
+    error = goldbach_increase_capacity(array);
   }
-  array->elements[array->count++] = element;  // New value in the array
-  return EXIT_SUCCESS;
+  if (error == EXIT_SUCCESS) {
+    array->elements[array->count].value = num;
+    array->elements[array->count].cant_sum = 0;
+    sumas_value_init(&array->elements[array->count].array_sum);
+    array_primos_init(&array->elements[array->count].
+    array_primos);
+    array->count++;
+  }
+  return error;
 }
 
-int array_int64_increase_capacity(array_int64_t* array) {
+
+int goldbach_increase_capacity(array_int64_t *array) {
   size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
-  int64_t* new_elements = (int64_t*)
-    realloc(array->elements, new_capacity * sizeof(int64_t));
-    // We do a realloc to create a new node
-// At this point we change the capacity and the elements for the new ones
-  if (new_elements) {
+  goldbach_t *new_array = (goldbach_t *)realloc
+  (array->elements, new_capacity * sizeof(goldbach_t));
+
+  if (new_array) { 
     array->capacity = new_capacity;
-    array->elements = new_elements;
+    array->elements = new_array;
     return EXIT_SUCCESS;
-  } else {
-    return EXIT_FAILURE;
   }
+  return EXIT_FAILURE;
 }
