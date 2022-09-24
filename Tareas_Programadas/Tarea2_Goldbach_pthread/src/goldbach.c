@@ -34,17 +34,6 @@ typedef struct private {
   size_t finish;
 } private_data_t;
 
-//------------------------------------------------------------
-// Ya no lo vamos a utilizar por no sirve para este diseno
-// typedef struct goldbach {
-//   array_int64_t values;  // input values
-//   array_int64_t cant_sum;  // total of goldbach sums
-//   array_int64_t sums;  // numbers of the goldabch sums if the number is negative
-//   array_int64_t primes_nums;  // prime numbers before
-//   // an especific number used to the sums
-// } goldbach_t;
-
-
 /**
  * @brief Calculates the prime numbers that are before the entered number
  *  and adds them in an array
@@ -83,14 +72,9 @@ int create_threads(shared_data_t *shared_data, size_t task_amount);
 void* asignar_thread(void *data);
 size_t formula_bloque(int i, int D, int w);
 
-/**
- * @brief Print the goldbach sums of a number, if the
- * number is negative prints the amount of sums and the numbers used, if 
- * the number is positive only prints the amount of sums
- * @param goldbach Pointer to a goldbach object
- * @return void
-*/
-void goldbach_print(const goldbach_t* goldbach);
+void goldbach_print(const array_int64_t* array, const uint64_t array_size);
+void print_par(const array_int64_t* array, int i);
+void print_impar(const array_int64_t* array, int i);
 
 // Primer subrutina cambiada, se le pasa un array de primos
 // y el numero
@@ -189,8 +173,10 @@ void goldbach_run(array_int64_t* goldbach, size_t thread_count, int argc,
     create_threads(shared_data, cant_nums);
     free(shared_data);  // LIbera datos
   }
-
-  // Aqui va la parte pa imprimir, pensar en como se hace
+  goldbach_print(goldbach, cant_nums);
+  clock_t end = clock();
+  time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+  printf("Tiempo: %f segundos\n", time_spent);  
 }
 
 uint64_t minimo(uint64_t a, uint64_t b) {
@@ -262,68 +248,53 @@ void* asignar_thread(void* data) {
   }
   return NULL;
 }
-void goldbach_print(const goldbach_t* goldbach) {
-  assert(goldbach);
-  int pointer = 0;  // Amount of spaces to move in sums
-  for (size_t index = 0; index < goldbach->values.count; ++index) {
-    const int64_t num = goldbach->values.elements[index];  // numero original
-    int64_t vabs = labs(goldbach->values.elements[index]);  // valor absoluto
-    if (vabs < 6) {  // Convert to positive
-      printf("%"PRId64 ": NA\n", num);
-    } else if (num > 0) {  // if is positive
-      if (num % 2 == 0) {  // pair
-        int sums_index = 0;  // Index that marks the limit
-        // of the sums of a determinated element
-        sums_index = 2 * goldbach->cant_sum.elements[index];
-        // print the cant_sums pair
-        printf("%"PRId64 ": %"PRId64 " sums\n", num,  // cant
-         goldbach->cant_sum.elements[index]);
-        pointer = pointer + sums_index;
-      } else {  // odd
-        int sums_index = 0;  // week conjeture needs to
-        // multiply by 3 because of the formula
-        sums_index = 3 * goldbach->cant_sum.elements[index];
-        // print the cant_sums pair
-        printf("%"PRId64 ": %"PRId64 " sums\n", num,  // cant
-         goldbach->cant_sum.elements[index]);
-        pointer = pointer + sums_index;
-      }
-    } else {  // negative
-      if (num % 2 == 0) {  // pair
-      // print the cant_sums pair
-        printf("%"PRId64 ": %"PRId64 " sums: ", num,
-          goldbach->cant_sum.elements[index]);
-        for (int i = 0; i < goldbach->cant_sum.elements[index]; i++) {
-          printf("%" PRId64 " + %" PRId64,
-          // Moving in all the array of sums
-            goldbach->sums.elements[pointer],
-            goldbach->sums.elements[pointer + 1]);
-            pointer = pointer + 2;
-          if (i < (goldbach->cant_sum.elements[index])-1) {
-            // This is to make the code more readable
-            printf(", ");
-          } else {
-            printf("\n");
-          }
-        }
-      } else {  // odd
-      // print the cant_sums odd
-        printf("%"PRId64 ": %"PRId64 " sums: ", num,  // cant 
-        goldbach->cant_sum.elements[index]);
-        for (int i = 0; i < goldbach->cant_sum.elements[index]; i++) {
-          printf("%" PRId64 " + %" PRId64 " + %" PRId64 ,
-            goldbach->sums.elements[pointer],
-            goldbach->sums.elements[pointer + 1],
-            goldbach->sums.elements[pointer + 2]);
-          pointer = pointer + 3;
-          if (i < (goldbach->cant_sum.elements[index])-1) {
-            // This is to make the code more readable
-            printf(", ");
-          } else {
-            printf("\n");
-          }
+void goldbach_print(const array_int64_t* array, const uint64_t array_size) {
+  for (uint64_t i = 0; i < array_size; i++) {
+    int64_t num = labs(array->elements[i].value);
+
+    printf("%" PRId64 " cantidad sumas: ", array->elements[i].value);
+    if (0 <= num && num <= 5) {
+      printf("NA");
+    } else {
+      printf("%" PRId64 " ", array->elements[i].cant_sum);
+      if (array->elements[i].value < 0) {
+        printf(" -> ");
+        if (array->elements[i].value % 2 == 0) {
+          print_par(array, i);
+        } else {
+          print_impar(array, i);
         }
       }
+    }
+    printf("\n");
+  }
+}
+
+void print_par(const array_int64_t* array, int i) {
+  for (int j = 0; j < array->elements[i].cant_sum; j++) {
+    if ( j ==  array->elements[i].cant_sum - 1 ) {
+      printf("%" PRId64 " + %" PRId64, array->elements[i].array_sum.
+      sumas_value[j].num1, array->elements[i].array_sum.sumas_value
+      [j].num2);
+    } else {
+      printf("%" PRId64 " + %" PRId64 ", ", array->elements[i].
+      array_sum.sumas_value[j].num1, array->elements[i].array_sum.
+      sumas_value[j].num2);
+    }
+  }
+}
+void print_impar(const array_int64_t* array, int i) {
+  for (int j = 0; j < array->elements[i].cant_sum; j++) {
+    if ( j == array->elements[i].cant_sum - 1 ) {
+      printf("%" PRId64 " + %" PRId64 " + %" PRId64, array->elements[i]
+      .array_sum.sumas_value[j].num1, array->elements[i].array_sum.
+      sumas_value[j].num2, array->elements[i].array_sum.sumas_value
+      [j].num3);
+    } else {
+      printf("%" PRId64 " + %" PRId64 " + %" PRId64 ", ",
+      array->elements[i].array_sum.sumas_value[j].num1,
+      array->elements[i].array_sum.sumas_value[j].num2,
+      array->elements[i].array_sum.sumas_value[j].num3);
     }
   }
 }
