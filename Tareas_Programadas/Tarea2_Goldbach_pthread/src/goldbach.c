@@ -76,7 +76,7 @@ int create_threads(shared_data_t *shared_data, size_t task_amount);
  * @param goldbach Pointer to a goldbach object
  * @return void
 */
-void calculate_sums(goldbach_t* goldbach);
+void calcular_sumas(goldbach_t* goldbach);
 
 /**
  * @brief Print the goldbach sums of a number, if the
@@ -86,29 +86,6 @@ void calculate_sums(goldbach_t* goldbach);
  * @return void
 */
 void goldbach_print(const goldbach_t* goldbach);
-
-goldbach_t* goldbach_create(void) {
-  goldbach_t* goldbach = (goldbach_t*)
-    calloc(1, sizeof(goldbach_t));  // request memory
-  if (goldbach) {
-    // Inicialize the values array
-    array_int64_init(&goldbach->values);
-     // inicialize the amount of sums array
-    array_int64_init(&goldbach->cant_sum);
-    // inicialize the sums array
-    array_int64_init(&goldbach->sums);
-  }
-  return goldbach;
-}
-
-void goldbach_destroy(goldbach_t* goldbach) {
-  assert(goldbach);
-  // Free all the memory used in the program
-  array_int64_destroy(&goldbach->values);
-  array_int64_destroy(&goldbach->cant_sum);
-  array_int64_destroy(&goldbach->sums);
-  free(goldbach);
-}
 
 // Primer subrutina cambiada, se le pasa un array de primos
 // y el numero
@@ -131,85 +108,56 @@ int calcular_primos(array_primos_t* array_primos, int64_t num) {
   return cont2;
 }
 
-void calculate_sums(goldbach_t* goldbach) {
-  assert(goldbach);  // Defensive programming
-  for (size_t i = 0; i < goldbach->values.count; i++) {  // array lenght
-    int64_t cant_sum = 0;  // Variable that saves the cant_sums
-    // Change the value to positive if it is negative
-    int64_t num = labs(goldbach->values.elements[i]);
-    calculate_primes(goldbach, num);
-    if (num > 5) {  // Condition of goldbach
-      // it has to be higher than 5
+void calcular_sumas(goldbach_t* goldbach) {
+  // Implementar
+}
 
-      // Calling calculate_primes
-      // (1,3,5,7) y (6)
-      // Search if this can be better
-      if (num % 2 == 0) {  // if this is a pair
-        for (size_t j = 0; j < goldbach->primes_nums.count
-         && (goldbach->primes_nums.elements[j]) <=
-          num / 2; j++) {  // as long as j
-          // is less than the size of the array
-          // and the prime number is less than or
-          // equal to the num/2, continue the
-          // cycle
-          for (size_t k = j; k < goldbach->primes_nums.count
-           && (goldbach->primes_nums.elements[k]) <
-            num; k++ ) {
-            if (goldbach->primes_nums.elements[j] +
-             goldbach->primes_nums.elements[k] == num) {
-              cant_sum++;
-              // if the sum of each elements is the number
-              // we save this nums in the array sums
-              array_int64_append(&goldbach->sums,
-               goldbach->primes_nums.elements[j]);
-              array_int64_append(&goldbach->sums,
-               goldbach->primes_nums.elements[k]);
-            }
-          }
+void calcular_pares
+  (goldbach_t *elements, int64_t num, int prime_count) {
+  bool array_sum_required = false;
+  if (elements->value < 0) {
+    array_sum_required = true;
+  }
+  for (int i = 0; i < prime_count; i++) {
+    for (int j = i; j < prime_count; j++) {
+      if (elements->array_primos.primo[i] +
+      elements->array_primos.primo[j] == num) {
+        elements->cant_sum++;
+        if (array_sum_required) {
+          sumas_value_append(&elements->array_sum,
+          elements->array_primos.primo[i],
+          elements->array_primos.primo[j], 0);
         }
-        // And then we pass the cant of sums into the array of sums
-        array_int64_append(&goldbach->cant_sum, cant_sum);
-        cant_sum = 0;  // reset to be used again
-      } else {  // case of odd numbers
-          // while a is less than the array of primes lenght
-          // and see if the element is less than the element / 2
-          // this is for optimize something
-          for (size_t a = 0; a < goldbach->primes_nums.count
-           && (goldbach->primes_nums.elements[a]) <
-            (num-1) / 2; a++) {  // sum "1" + 3 + 5
-            for (size_t b = a; b < goldbach->primes_nums.count
-             && (goldbach->primes_nums.elements[b])
-             < num; b++) {  // sum 1 + "3" + 5
-              for (size_t c = b; c < goldbach->primes_nums.count &&
-               (goldbach->primes_nums.elements[c]) < num; c++) {
-                // sum 1 + 3 + "5"
-                if (goldbach->primes_nums.elements[a] +
-                 goldbach->primes_nums.elements[b] +
-                  goldbach->primes_nums.elements[c] == num) {
-                  cant_sum++;
-                // Sees if the sum of the 3 elements is the number
-                // if it is correct append to the sums 3 nums
-                  array_int64_append(&goldbach->sums,
-                   goldbach->primes_nums.elements[a]);
-                  array_int64_append(&goldbach->sums,
-                   goldbach->primes_nums.elements[b]);
-                  array_int64_append(&goldbach->sums,
-                   goldbach->primes_nums.elements[c]);
-                }
-                // array_int64_destroy(&goldbach->primes_nums);
-              }
-            }
-          }
-        // Append the count of sums and then go back to 0
-          array_int64_append(&goldbach->cant_sum, cant_sum);
-          cant_sum = 0;  // reinicia la cantidad de sums
-        }
-    } else {  // Case if the number is less than 5
-      array_int64_append(&goldbach->cant_sum, 0);
+      }
     }
-      array_int64_destroy(&goldbach->primes_nums);  // Destroy the primes array
   }
 }
+
+void calcular_impares(goldbach_t *elements, int64_t
+num, int prime_count) {
+  bool array_sum_required = false;
+  if (elements->value < 0) {
+    array_sum_required = true;
+  }
+  for (int i = 0; i < prime_count; i++) {
+    for (int j = i; j < prime_count; j++) {
+      for (int k = j; k < prime_count; k++) {
+        if (elements->array_primos.primo[i] +
+        elements->array_primos.primo[j] +
+        elements->array_primos.primo[k] == num) {
+          elements->cant_sum++;
+          if (array_sum_required) {
+            sumas_value_append(&elements->array_sum,
+            elements->array_primos.primo[i],
+            elements->array_primos.primo[j],
+            elements->array_primos.primo[k]);
+          }
+        }
+      }
+    }
+  }
+}
+
 
 void goldbach_run(array_int64_t* goldbach, size_t thread_count, int argc,
  char* argv[]) {
