@@ -65,9 +65,6 @@ int calcular_primos(array_primos_t* array_primos, int64_t num);
 int goldbach_recibir_datos(array_int64_t *array, FILE *file, int argc,
 char* argv[]);
 
-
-int create_threads(shared_data_t *shared_data, size_t task_amount);
-
 /**
  * @brief Calculates all the goldbach sums, save the amount of sums in a variable 
  * and saves the prime numbers needed into the appropriate array
@@ -76,7 +73,15 @@ int create_threads(shared_data_t *shared_data, size_t task_amount);
  * @param goldbach Pointer to a goldbach object
  * @return void
 */
-void calcular_sumas(goldbach_t* goldbach);
+void calcular_sumas(goldbach_t* elements);
+void calcular_pares 
+(goldbach_t* elements, int64_t num, int prime_count);
+void calcular_impares(goldbach_t* elements, int64_t
+num, int prime_count);
+
+int create_threads(shared_data_t *shared_data, size_t task_amount);
+void* asignar_thread(void *data);
+size_t formula_bloque(int i, int D, int w);
 
 /**
  * @brief Print the goldbach sums of a number, if the
@@ -108,8 +113,18 @@ int calcular_primos(array_primos_t* array_primos, int64_t num) {
   return cont2;
 }
 
-void calcular_sumas(goldbach_t* goldbach) {
-  // Implementar
+void calcular_sumas(goldbach_t* elements) {
+  int64_t num = labs(elements->value);
+
+  int prime_count = calcular_primos
+    (&elements->array_primos, num);
+  if (num > 5) {
+    if (elements->value % 2 == 0) {
+      calcular_pares(elements, num, prime_count);
+    } else {
+      calcular_impares(elements, num, prime_count);
+    }
+  }
 }
 
 void calcular_pares
