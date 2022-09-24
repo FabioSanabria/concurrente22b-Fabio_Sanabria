@@ -1,20 +1,20 @@
-// Goldbach Serial assignment version 1.0
+// Goldbach_pthread program v1.3 Fabio Sanabria Valerin
 // <fabio.sanabria@ucr.ac.cr>
-// Copyright [2022] <Fabio Andrés Sanabria Valerin>
-// Credits to Jeisson Hidalgo to provide a lot of
-// this code in his list of videos "Taller de C++ a C"
+// Copyright [2022] <Fabio Sanabria Valerin>
 #ifndef ARRAY_INT64_H
 #define ARRAY_INT64_H
 
-#include <stddef.h>  // Defines various variable types and macros
-#include <inttypes.h>  // Provide a set of integer types
+#include <stddef.h>
+#include <inttypes.h>
 
 #include "array_num64.h"
-// Nuevo struct, este va a ser el arreglo mas importante
-// va a ser el goldbach y va a contener el valor, y los arreglos
-// de primos y sumas, la cantidad ya no es necesaria ser de arreglos
-// pero se podria crear una para imprimir todas las cantidades al final
-// DOcumentar con doxygen
+
+
+/**
+ * @brief Estructura de datos goldbach
+ *  contiene los datos que pertenecen
+ * a cada valor ingresado
+*/
 typedef struct goldbach_array {
   int64_t value;
   int64_t cant_sum;
@@ -22,36 +22,41 @@ typedef struct goldbach_array {
   array_primos_t array_primos;
 } goldbach_t;
 
-// Este struct practicamente va a llamar al goldbach
+/**
+ * @brief Estructura de datos array
+ *  array que contiene goldbach
+ * y sus elementos
+*/
 typedef struct {
-  size_t capacity;  // Capacity of the array
-  size_t count;  // The number of elements in the array
-  goldbach_t* elements;  // The elements that can be stored in this array
+  size_t capacity;
+  size_t count;
+  goldbach_t* elements;
 } array_int64_t;
 
 /**
  * @brief Constructor
- * @param array Pointer to an array to simulate the dinamic arrays in c++
- * @return An error code, EXIT_SUCCESS if the code run correctly or 
- * EXIT_FAILURE if the code fails in this method
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return void
 */
 void array_int64_init(array_int64_t* array);
 
 /**
  * @brief Destructor
- * @param array Pointer to an array to simulate the dinamic arrays in c++
- * @return An error code, EXIT_SUCCESS if the code run correctly or 
- * EXIT_FAILURE if the code fails in this method
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return void
 */
 void array_int64_destroy(array_int64_t* array);
 
 /**
- * @brief Append elements in the array 
- * @param array Pointer to an array to simulate the dinamic arrays in c++
- * @param element Element that the user wants to store in the array
- * @return An error code, EXIT_SUCCESS if the code run correctly or 
- * EXIT_FAILURE if the code fails in this method
+ * @brief Coloca un numero dentro del array
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @param element el numero que se desea ingresar en el array
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
 */
 int array_int64_append(array_int64_t* array, int64_t element);
+
+
 
 #endif  // ARRAY_INT64_H

@@ -244,21 +244,25 @@ void* asignar_thread(void* data) {
   shared_data_t* shared_data = private_data->shared_data;
 
   for ( size_t i = private_data->start; i < private_data->finish; i++ ) {
-    // Metodo de calcular sumas para cada elemento, implementar
+    calcular_sumas(&shared_data->array->elements[i]);
   }
   return NULL;
 }
+
 void goldbach_print(const array_int64_t* array, const uint64_t array_size) {
   for (uint64_t i = 0; i < array_size; i++) {
     int64_t num = labs(array->elements[i].value);
 
-    printf("%" PRId64 " cantidad sumas: ", array->elements[i].value);
+    printf("%" PRId64 ": ", array->elements[i].value);
     if (0 <= num && num <= 5) {
-      printf("NA");
+      if(num == 4) {
+        printf("1 sums");
+      } else {
+        printf("NA");
+      }
     } else {
-      printf("%" PRId64 " ", array->elements[i].cant_sum);
+      printf("%" PRId64 " sums: ", array->elements[i].cant_sum);
       if (array->elements[i].value < 0) {
-        printf(" -> ");
         if (array->elements[i].value % 2 == 0) {
           print_par(array, i);
         } else {

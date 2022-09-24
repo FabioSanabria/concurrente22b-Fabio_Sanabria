@@ -7,23 +7,34 @@
 #include <stddef.h>
 #include <inttypes.h>
 
-// Numeros que cumplen los requisitos de
-// goldbach
+/**
+ * @brief Estructura de datos de sumas
+ *  estructura que contiene los 3 valores
+ * necesarios para las sumas, en caso de 
+ * conjetura debil se usan solo 2
+*/
 typedef struct {
   int64_t num1; //num1
   int64_t num2;
   int64_t num3;
-} sumas_value_t;
+}sumas_value_t;
 
-// Este arreglo va a contener el arreglo de sumas
-// por lo que va a ser mas facil de agarrar
+/**
+ * @brief Estructura de datos con las sumas de value
+ *  array que contiene las sumas
+ * procesadas del valor ingresado
+*/
 typedef struct {// array con todas las sumas de value
   size_t capacity;
   size_t count;
  sumas_value_t* sumas_value;
 } array_sum_t;
 
-// Array con numeros primos
+/**
+ * @brief Estructura de datos de numeros primos
+ *  array que contiene la informacion de 
+ * los numeros primos
+*/
 typedef struct { // array de numeros primos
   size_t capacity;
   size_t count;

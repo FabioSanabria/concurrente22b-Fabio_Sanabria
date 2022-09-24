@@ -8,6 +8,13 @@
 #include "array_int64.h"
 #include "array_num64.h"
 
+/**
+ * @brief Incrementa la capacidad del arreglo dinamicos
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
+*/
 int goldbach_increase_capacity(array_int64_t *array);
 
 void array_int64_init(array_int64_t *array) {
@@ -44,13 +51,19 @@ int array_int64_append(array_int64_t *array, int64_t num) {
   return error;
 }
 
-
+/**
+ * @brief Incrementa la capacidad del arreglo dinamicos
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
+*/
 int goldbach_increase_capacity(array_int64_t *array) {
   size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
   goldbach_t *new_array = (goldbach_t *)realloc
   (array->elements, new_capacity * sizeof(goldbach_t));
 
-  if (new_array) { 
+  if (new_array) {
     array->capacity = new_capacity;
     array->elements = new_array;
     return EXIT_SUCCESS;
