@@ -1,0 +1,3 @@
+Olvidaba mencionar en el commit que tambien incluye la mitad del tema 12 debido a que ese tema era la implementacion de los consumidores, cosa que ya esta hecha 
+y documentada en el codigo subido. La otra mitad del tema 12, el tema 13 y la induccion no se subian debido a que es practicamente explicacion de lo que hay
+que aplicar en el proyecto
