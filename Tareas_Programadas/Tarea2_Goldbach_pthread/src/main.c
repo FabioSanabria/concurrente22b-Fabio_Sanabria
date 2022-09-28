@@ -14,9 +14,9 @@
 
 // procedure main
 int main(int argc, char* argv[]) {
-
+  // Cantidad de hilos del procesador
   uint64_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
-  
+
   if (argc == 2) {
     if (sscanf(argv[1], "%" SCNu64, &thread_count) ==1) {
     } else {
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     }
   }
   array_int64_t goldbach;
-  array_int64_init(&goldbach);
+  array_int64_init(&goldbach);  // Inicializa el array de goldbach
   goldbach_run(&goldbach, thread_count, argc, argv);
     // goldbach, argc, argv se pasan los argumentos
   array_int64_destroy(&goldbach);  // se llama al destructor

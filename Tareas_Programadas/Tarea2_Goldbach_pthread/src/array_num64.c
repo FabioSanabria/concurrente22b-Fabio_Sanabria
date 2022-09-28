@@ -8,8 +8,27 @@
 #include "array_int64.h"
 #include "array_num64.h"
 
-// Private 
-int sumas_value_increase_capacity(array_sum_t *array);  // Esto lo puse yo Fabio
+// Private
+
+/**
+ * @brief Incrementa la capacidad del arreglo dinamico de sumas
+ * @param array un puntero a un array de sumas,
+ * debe ser distinto a NULL
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
+*/
+int sumas_value_increase_capacity(array_sum_t *array);
+
+/**
+ * @brief Incrementa la capacidad del arreglo dinamico de primos
+ * @param array un puntero a un array dde primos,
+ * debe ser distinto a NULL
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
+*/
+int array_primos_increase_capacity(array_primos_t* array);
 
 void sumas_value_init(array_sum_t *array) {
   array->capacity = 0;
@@ -24,13 +43,6 @@ void sumas_value_destroy(array_sum_t *array) {
   array->sumas_value = NULL;
 }
 
-/**
- * @brief Incrementa la capacidad del arreglo dinamicos
- * @param array un puntero a un array,debe ser distinto a NULL
- * @return un codigo de error
- * EXIT_SUCCESS si se analizaron correctamente los datos
- * EXIT_FAILURE si no se analizan los datos correctamente
-*/
 int sumas_value_increase_capacity(array_sum_t *array) {
   size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
   sumas_value_t *new_array =
@@ -73,13 +85,6 @@ void array_primos_destroy(array_primos_t* array) {
   array->primo = NULL;
 }
 
-/**
- * @brief Incrementa la capacidad del arreglo dinamicos
- * @param array un puntero a un array,debe ser distinto a NULL
- * @return un codigo de error
- * EXIT_SUCCESS si se analizaron correctamente los datos
- * EXIT_FAILURE si no se analizan los datos correctamente
-*/
 int array_primos_increase_capacity(array_primos_t* array) {
   size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
   int64_t* new_array = (int64_t*)
