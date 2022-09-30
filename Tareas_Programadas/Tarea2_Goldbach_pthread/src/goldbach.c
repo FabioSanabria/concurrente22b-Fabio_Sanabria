@@ -398,13 +398,15 @@ void goldbach_print(const array_int64_t* array, const uint64_t array_size) {
         }
       }
     } else {
-      printf("%" PRId64 " sums: ", array->elements[i].cant_sum);
       if (array->elements[i].value < 0) {
+        printf("%" PRId64 " sums: ", array->elements[i].cant_sum);
         if (array->elements[i].value % 2 == 0) {
           print_par(array, i);
         } else {
           print_impar(array, i);
         }
+      } else {
+        printf("%" PRId64 " sums ", array->elements[i].cant_sum);
       }
     }
     printf("\n");
