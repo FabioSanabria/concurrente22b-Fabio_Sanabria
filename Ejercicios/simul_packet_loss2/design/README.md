@@ -1,0 +1,9 @@
+### Network_simul_packet_loss2
+## Codigo del Ejercicio 24
+
+Modifique su solución al Ejercicio 24 [network_simul_packet_loss] para que el hilo que pierde paquetes esté ubicado entre el productor y el repartidor, de tal forma, que el porcentaje de pérdida de paquetes afecte a todos los paquetes y no una fracción de los mensajes de red.
+
+¿Cuántas líneas de código debió modificar para reflejar este cambio? ¿Cuántas de esas líneas fueron en la implementación de su **(a) productor, (b) repartidor, (c) consumidor, (d) ensamblador, y (e) controlador de la simulación?**
+
+
+`Se cambio un poco la estructura del programa para poder aprovechar la del anterior, en lugar de cambiar los paquetes entre el productor y el repartidor, lo que se hizo fue crear un cilo que afectara a todos los consumidores en lugar de al primero como lo hacia el ejercicio 23, ahora lo que podemos notar es una mayor cantidad de perdidas de paquetes ya que no solo 1 se puede equivocar sino que tambien otra gran cantidad de consumidores tambien pueden perder datos, se cambio el controlador de la simulacion para que agarrar a todos los numeros en un ciclo en lugar de a 1, ademas se incluyo una impresion (7 lines aprox), en repartidor y en productor no se toco nada y en consumidor se creo una condicional y un numero random para verificar si se pierde el paquete o no, se agregaron por ahi de 15 lines de codigo, mas que todo se modifico consumeForever, el thread y el start del ProduceConsumerTest. Analizando de manera objetivva los resultados, era obvio saber que se iba a perder gran cantidad de paquetes ya que todos los consumidores/ assemblers se iban a equivocar pero como consume para siempre entonces no va a terminar hasta que el ultimo elemento de la cola de produccion sea sacada`

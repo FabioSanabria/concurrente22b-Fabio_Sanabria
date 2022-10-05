@@ -1,0 +1,55 @@
+procedure main(argc, argv[]):
+
+    call start to begin the excecution
+
+procedure ProducerSimulator  
+  // Put all the argumets in their respective variable
+    packages := integer(argv[1])  // Cantidad de paquetes
+    if argc = 7 then    
+    consumers := integer(argv[2])
+    prod_delay := integer(argv[3])
+    disp_delay := integer(argv[4])
+    cons_delay := integer(argv[5])
+    packet loss := integer(argv[6])
+
+    create all the queue to simulate the producer calling the
+    dispatcher and all the queues for consumer
+    
+    if (packet loss = 0) {
+        consumer call startThread();
+    } else {
+        consumer call startThread(packet loss);
+    }
+    consumers.join();
+    producer.join();
+    dispatcher.join();
+  end if
+end procedure
+
+procedure Thread:
+    thread = create new(virtual run, thread );
+end procedure
+
+procedure run:
+    if run -> consumer
+    call consumeForever
+    
+    if run -> dispatcher
+    call consumeForever
+
+    if run -> producer
+    call createMessage
+end procedure
+
+procedure consumeForever
+
+while(true) do 
+number := create_random_number
+    if(packet loss < number) do
+        print("Packet lost");
+    end else do
+        Go to the queue
+        continue consuming
+    end
+end
+end function
