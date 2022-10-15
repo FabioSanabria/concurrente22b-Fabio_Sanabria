@@ -1,0 +1,19 @@
+procedure main
+    create thread_count := total_of_CPUs
+
+    if (argc bigger or equals than 2) do
+        thread_count := omp_num_of_threads_method(argv[1]);
+    end
+
+    if (argc bigger or equals than 3) do
+        integer iterator_count := arv[2]
+    end
+
+    parallel section(thread_count, default) do
+        for (int iteration = 0, iterator smaller than iterator_count
+        increment iteration)
+        create mutex critical section
+        print(call thread_number + "/" +
+        call thread_count + "iteration" + iterator_count)
+    end
+end procedure

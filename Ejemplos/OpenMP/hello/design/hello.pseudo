@@ -1,0 +1,9 @@
+procedure main
+
+    inject code by #pragma omp parallel do
+        create mutex using #pragma omp critical do
+            print(Hello from secondary thread);
+        end mutex
+    end parallel_area
+
+end procedure

@@ -1,0 +1,13 @@
+procedure main
+    create thread_count := total_of_CPUs
+
+    if (arg equals with 2) do
+        thread_count := omp_num_of_threads_method(argv[1]);
+    end
+
+    parallel section do
+        create_mutex_OMP
+        print("Hello from the thread " + call thread_number
+        + call thread_count)
+    end
+end procedure

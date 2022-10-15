@@ -1,0 +1,37 @@
+procedure main
+create thread_count := total_of_CPUs
+
+if (argc bigger or equals than 2) do
+    thread_count := omp_num_of_threads_method(argv[1]);
+end
+
+if (argc bigger or equals than 3) do
+    integer iterator_count := arv[2]
+end
+
+if (argc bigger or equals than 4) do
+    block_size := arv[3]
+end
+
+if (block_size equals 0) do
+
+    schedule static
+    print(schedule static)
+
+    schedule dinamic
+    print(schedule dinamic)
+
+    schedule guide
+    print(schedule guide)    
+end else do
+    schedule static
+    print(schedule static, block_size)
+
+    schedule dinamic
+    print(schedule dinamic, block_size)
+
+    schedule guide
+    print(schedule guide, block_size)
+
+end
+end procedure
