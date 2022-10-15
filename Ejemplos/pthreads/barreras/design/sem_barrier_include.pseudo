@@ -1,0 +1,156 @@
+// Barrier es un registro con todas
+// las herramientas necesarias para
+// poder controlar la concurrencia y
+// la entrada y salida de los hilos en 
+// las barreras
+define barrier as record of
+// Cantidad total de hilos que se
+// van creando
+  limit as unsigned integer
+// Cantidad de hilos que se van a quedar
+// pegados en la barrera  
+  count as unsigned integer
+// Mutex que me permite accesar a
+// una region critica para que se pueda
+// cambiar algun registro de memoria 
+// compartida
+  can_access_record as mutex
+  // Se crea un toriniquete/trompo para que pueda controlar
+  // el paso de los hilos,  
+  turnstile1 as semaphore
+  // Se crea otro toriniquete/ trompo para que pueda controlar
+  // el paso de los hilos,  
+  turnstile2 as semaphore
+end record
+
+//Aqui se inicializa todo lo anterior creado en el
+// registro
+procedure create_barrier(limit):
+  // Se declara un nuevo registro de tipo barrera
+  declare new_barrier as barrier
+  // Se inicializa la variable limit creada dentro
+  // del registro
+  new_barrier.limit := limit
+  // Se inicializa la variable count en 0 creada dentro
+  // del registro
+  new_barrier.count := 0
+  // Se inicializa el semaforo can_access_record en 1 para que
+  // para que en el momento de hacer un wait en la fase 1
+  // y 2 de la barrera no se quede dormido para siempre  
+  new_barrier.can_access_record := create_semaphore(1)
+  // Se inicializa el semaforo turnstile1 que simula una
+  // barrera de hilso, se inicializa en 0 aunque hay que tener
+  // cuidado ya que algun hilo lo puede dejar abierto y puede
+  // provocar un desorden a la hora de la ejecucion
+  new_barrier.turnstile1 := create_semaphore(0)
+  // Se inicializa el semaforo turnstile2 que simula una
+  // barrera de hilso, se inicializa en 1 ya que hay un
+  // momento en donde el ultimo hilo deja abierto la barrera
+  // provocando un caos a la hora de ejecutar
+  new_barrier.turnstile2 := create_semaphore(1)
+  // Retorna la barrera con todos los atributas ya
+  // inicializados
+  return new_barrier
+end procedure
+
+procedure wait(barrier):
+// Llama a la fase 1 de la barrera
+  barrier_phase1(barrier)
+// Llama a la fase 2 de la barrera
+  barrier_phase2(barrier)
+end procedure
+
+procedure barrier_phase1(barrier):
+// Mutex que controla la entra de los hilos
+// para evitar condiciones de carrera
+  wait(barrier.can_access_record)
+  // Si la cantidad de hilos es igual al contador
+  // entonces entra y le hace un wait al torniquete 2
+  // para evitar los errores de la barrera reusable y
+  // luego incrementa el signal para que los hilos puedan pasar
+  if ++barrier.count == barrier.limit then
+  // Espera para evitar el error de las barreras con contador 1
+    wait(barrier.turnstile2)
+  // Incrementa el contador del torniquete 1 para que pueda pasar
+  // los siguientes hilos
+    signal(barrier.turnstile1)
+  end if
+  // Aqui se le incrementa el can_access para que otro hilo pueda
+  // entrar
+  signal(barrier.can_access_record)
+  // Barrera que hace que todos los hilos se queden esperando a que el ultimo
+  // hilo haga un signal  
+  wait(barrier.turnstile1)
+  // Este signal simula lo siguiente: EL ultimo hilo hace un signal y uno de los
+  // hilos que se encontraba metido en la barrera sale e incrementa el torniquete 1
+  // al incrementarlo en hilo anterior puede salir de la barrera e incrementa la del
+  // anterior y asi sucesivamente, hasta llegar al ultimo y el ultimo deja el contador
+  // del torniquete 1 en 1 por lo que se requiere hacer un wait en otro lado    
+  signal(barrier.turnstile1)
+end procedure
+
+procedure barrier_phase2(barrier):
+// Mutex que controla la entra de los hilos
+// para evitar condiciones de carrera
+  wait(barrier.can_access_record)
+  // Si el contador es igual a 0 
+  // entonces entra y le hace un wait al torniquete 1 para quitar
+  // el error que daba de que el utlimo dejaba la barrera en 1
+  // y luego incrementa el signal del torniquete 2 para que los 
+  // hilos puedan pasar  
+  if --barrier.count == 0 then
+  // Espera para evitar el error de las barreras con contador 1  
+    wait(barrier.turnstile1)
+  // Incrementa el contador del torniquete 2 para que pueda pasar
+  // los siguientes hilos    
+    signal(barrier.turnstile2)
+  end if
+  // Aqui se le incrementa el can_access para que otro hilo pueda
+  // entrar  
+  signal(barrier.can_access_record)
+  // Barrera que hace que todos los hilos se queden esperando a que el ultimo
+  // hilo haga un signal  
+  wait(barrier.turnstile2)
+  // Este signal simula lo siguiente: EL ultimo hilo hace un signal y uno de los
+  // hilos que se encontraba metido en la barrera sale e incrementa el torniquete 2
+  // al incrementarlo en hilo anterior puede salir de la barrera e incrementa la del
+  // anterior y asi sucesivamente, hasta llegar al ultimo y el ultimo deja el contador
+  // del torniquete 2 en 1 por lo que se requiere hacer un wait en otro lado    
+  signal(barrier.turnstile2)
+end procedure
+
+procedure main:
+// Agarra la cantidad de hilos totales
+  shared constant thread_count = read_integer()
+// Aqui crea la barrera que se va a utilizar para
+// controlar la concurrencia de los hilos  
+  shared my_barrier := create_barrier(thread_count)
+// Crea los hilos dependiendo de la cantidad de hilos
+// que se desean mediante la variable thread_count  
+  create_threads(thread_count, secondary)
+end procedure
+
+procedure secondary:
+  while true do
+  // Declaracion A
+    Sentence A
+  // Llama al procedure barrier_phase1  
+    barrier_phase1(my_barrier)
+  // Declaracion B  
+    Sentence B
+  // Llama al procedure barrier_phase1  
+    barrier_phase2(my_barrier)
+  end while
+end procedure
+
+// Este procedimiento no se usa
+procedure third(row_count):
+// Iteara y llama a process
+  for row := 0 to row_count do
+    // Llama a process
+    process_row(row)
+    // Llama al metodo wait y le
+    // pasamos la barrera
+    wait(my_barrier)
+  end for
+end procedure

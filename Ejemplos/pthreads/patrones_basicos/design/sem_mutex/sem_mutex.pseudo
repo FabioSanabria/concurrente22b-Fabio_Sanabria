@@ -1,0 +1,50 @@
+procedure main:
+// Crea un semaforo compartido entre hilos que se
+// inicializa en 1, este semaforo es muy parecido a
+// un mutex y tiene de nombre semaforo binario
+  shared can_access_count := create_semaphore(1)
+// Crea un contador compartido entre todos los hilos  
+  shared count := 0
+// Se crea el hilo a  
+  create_thread(thread_a)
+// Se crea el hilo b  
+  create_thread(thread_b)
+end procedure
+
+procedure thread_a:
+// Si llega primero el hilo "a" lo que
+// hace es decrementar el semaforo a 0
+// e inicia con la ejecucion de adentro,
+// al decrementar el contador, el hilo "b"
+// no puede entrar a la zona critica ya que
+// tiene que esperar a que el hilo que entro
+// haga un signal y lo incremente, esto hace 
+// una serializacion de codigo
+  wait(can_access_count)
+// Incrementa el contador compartido  
+  count := count + 1
+// Incrementa el contador del semaforo para que
+// ahora si el siguiente hilo pueda pasar, si ya
+// el otro hilo realizo su ejecucion, entonces incrementa
+// el semaforo y lo deja en su estado inicial que es 1
+  signal(can_access_count)
+end procedure
+
+procedure thread_b:
+// Si llega primero el hilo "b" lo que
+// hace es decrementar el semaforo a 0
+// e inicia con la ejecucion de adentro,
+// al decrementar el contador, el hilo "a"
+// no puede entrar a la zona critica ya que
+// tiene que esperar a que el hilo que entro
+// haga un signal y lo incremente, esto hace 
+// una serializacion de codigo
+  wait(can_access_count)
+// Incrementa el contador compartido  
+  count := count + 1
+// Incrementa el contador del semaforo para que
+// ahora si el siguiente hilo pueda pasar, si ya
+// el otro hilo realizo su ejecucion, entonces incrementa
+// el semaforo y lo deja en su estado inicial que es 1
+  signal(can_access_count)
+end procedure

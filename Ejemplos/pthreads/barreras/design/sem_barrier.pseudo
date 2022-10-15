@@ -1,0 +1,50 @@
+procedure main:
+  // How many threads have arrived to the barrier
+  // Indica la cantidad de hilos que llegaron a la barrera
+  shared count := 0
+  // Protects the increment of the count serializing a piece of code
+  // Esto sirve para proteger a la variable count de condiciones de carrera
+  shared can_access_count := create_semaphore(1)
+  // Locked (0) until all threads arrive, then it is unlocked (1)
+  // Simulacion de barrera, esta en 0 hasta que todos los hilos hayan
+  // ejecutado el statement A
+  shared barrier := create_semaphore(0)
+  // Esta es la cantidad de hilos leidos
+  shared constant thread_count = read_integer()
+  // Aqui crea un thread team y todos los hilos llaman
+  // a secondary
+  create_threads(thread_count, secondary)
+end procedure
+
+// El objetivo de este metodo es conseguir que todos los hilos
+// sin excepcion, ejecuten primero el statement A y luego el statement
+// B
+procedure secondary:
+// declaracion que queremos que se ejecute primero
+  Statement A
+  // Mutex que controla el contador
+  wait(can_access_count)
+  // Incrementa el contador en 1
+    count := count + 1
+  // Si el contador es igual a la cantidad de hilos entonces significa
+  // que todos los hilos ya han ejecutado la declaracion A y por lo tanto
+  // el ultimo hilo que llego es el encargado de hacer signal a todos los hilos
+  // creados para que todos puedan ejecutar la declaracion B
+    if count = thread_count then
+    // Ciclo que itera para incrementar el contador de la barrera
+      for index := 0 to thread_count do
+      // Incrementa la barrera para que pase un hilo  
+        signal(barrier)
+      end for
+    end if
+  // Aqui se incrementa el access_count, si el hilo que lo incrementa no es el ultimo
+  // entoces esto significa que le va a dar paso a otro hilo para que ejecute la zona
+  // critica, si es el ultimo incrementa el contador y continua hasta llegar al wait 
+  // donde ya no tiene que esperar mas ya que se le hizo un signal anteriormente  
+  signal(can_access_count)
+// Si la barrera todavia esta en 0 nadie puede pasar, pero, si esta inicializado con la cantidad
+// de hilos en esta ejecucion, cualquiera puede pasar
+  wait(barrier)
+  // Statement B can be only executed until all threads have run Statement A
+  Statement B
+end procedure

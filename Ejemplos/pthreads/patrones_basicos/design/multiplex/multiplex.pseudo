@@ -1,0 +1,31 @@
+procedure main:
+// Crea un variable que almacena la cantidad de skaters
+// que se leyeron en el read_integer()
+  shared constant skater_count = read_integer()
+// Crea un variable que almacena la capacidad del cuarto o
+// maximo de hilos que puede soportar el "cuarto"
+// que se leyeron en el read_integer()  
+  shared constant room_capacity = read_integer()
+// Semaforo compartido para controlar la entrada de los hilos
+  shared can_skate := create_semaphore(room_capacity)
+// Crea la cantidad de hilos pedidos por el read_integer()
+  create_threads(skater_count, skater)
+end procedure
+
+procedure skater:
+  // Concurrency-bounded region
+// Esto simula una pista de patinje en donde
+// se tiene una capacidad maxima de patinadores
+// por lo que se crea un semaforo inicializado con
+// la cantidad maxima de patinadores que pueden llegar
+// y cada uno de ellos van entrando al wait
+  wait(can_skate)
+// Aqui los patinadores realizan sus respectivas tareas
+// de patinaje  
+  skate()
+// Y luego cuando terminan su ejecucion del metodo anterior
+// incrementan el contador para que los otros patinadores que 
+// estaban esperando su turno puedan entrar a la region critica
+// y continuen patinando  
+  signal(can_skate)
+end procedure

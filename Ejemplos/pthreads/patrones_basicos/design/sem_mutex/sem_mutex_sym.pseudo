@@ -1,0 +1,32 @@
+procedure main:
+// Crea un semaforo compartido inicializado en 1
+  shared can_access_count := create_semaphore(1)
+// Crea un contador compartido entre hilos inicializado
+// en 0  
+  shared count := 0
+// Esta es una variable que almacena la cantidad de hilos
+// ingresados en el metodo read_integer()  
+  shared constant thread_count = read_integer()
+// Aqui crea la cantidad de hilos que se pidieron
+// y se almacenaron el el constant thread_count
+// y cada uno de ellos llama a secondary  
+  create_threads(thread_count, secondary)
+end procedure
+
+procedure secondary:
+// Critical section, protegida
+// por semaforo
+// En esta parte todos los hilos
+// entran al mismo metodo e intentan
+// entrar en la region critica, no obstante,
+// el semaforo protege de las codiciones de
+// carrera que pueden ocurrir haciendo que cada
+// hilo entre 1 por 1 incrementando el contador
+// compartido
+  wait(can_access_count)
+// Aqui incrementa el contador compartido  
+  count := count + 1
+// Se le hace un signal para decirle al siguiente
+// hilo que incremente el contador  
+  signal(can_access_count)
+end procedure

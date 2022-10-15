@@ -1,0 +1,91 @@
+procedure main:
+  // Indica la cantidad de hilos que llegaron a la barrera
+  shared count := 0
+  // Protects the increment of the count serializing a piece of code
+  // Esto sirve para proteger a la variable count de condiciones de carrera
+  shared can_access_count := create_semaphore(1)
+  // Locked (0) until all threads arrive, then it is unlocked (1)
+  // Se crea un toriniquete/ trompo inicializado en 0 para que pueda controlar
+  // el paso de los hilos,
+  shared turnstile1 := create_semaphore(0)
+  // Se crea otro torniquete inicializado en 1 porque si esta en 0, en la linea
+  // 28 se va a quedar dormido para siempre
+  shared turnstile2 := create_semaphore(1)
+  // Esta es la cantidad de hilos leidos
+  shared constant thread_count = read_integer()
+  // Aqui crea un thread team y todos los hilos llaman
+  // a secondary
+  create_threads(thread_count, secondary)
+end procedure
+
+procedure secondary:
+  while true do
+  // Declaracion A  
+    Statement A
+
+    // Adapt rendezvous solution here
+  // Semaforo que simula un mutex, controla la entrada de los
+  // hilos cuando intentan cambiar memoria compartida  
+    wait(can_access_count)
+    // Incrementan el contador
+      count := count + 1
+    // Si el contador es igual al thread_count lo que se hace 
+    // es decrementar el semaforo el torniquete 2 y luego se hace
+    // un signal al torniquete 1 para que los demas hilos que esten
+    // pegados en la barrera puedan continuar  
+      if count = thread_count then
+      // La unica manera de que entre a esta region es que todos los
+      // hilos hayan pasado y esten pegados en la barrera, menos uno que
+      // es el encargado de hace pasar a todos los demas mediante un signal
+      // Aqui espera al torniquete 2 ya que hay un momento en donde los hilos
+      // lo dejan con el valor 1 y eso puede provocar un caos
+        wait(turnstile2)
+      // Signal al torniquete 1 para que se levante la barrera  
+        signal(turnstile1)
+      end if
+    // Incrementa el acceso a contador para que los demas hilos sigan pasando  
+    signal(can_access_count)
+    // Barrera que hace que todos los hilos se queden esperando a que el ultimo
+    // hilo haga un signal
+    wait(turnstile1)
+  // Este signal simula lo siguiente: EL ultimo hilo hace un signal y uno de los
+  // hilos que se encontraba metido en la barrera sale e incrementa el torniquete 1
+  // al incrementarlo en hilo anterior puede salir de la barrera e incrementa la del
+  // anterior y asi sucesivamente, hasta llegar al ultimo y el ultimo deja el contador
+  // del torniquete 1 en 1 por lo que se requiere hacer un wait en otro lado  
+    signal(turnstile1)
+
+    // Statement B can be only executed until all threads have run Statement A
+    Statement B
+
+    // Adapt rendezvous solution here
+    // Semaforo que simula un mutex, controla la entrada de los
+    // hilos cuando intentan cambiar memoria compartida  
+    wait(can_access_count)
+    // Aqui decrementa el contador ya que simula la salida de los hilos
+    // del torniquete
+      count := count - 1
+     // Como el contador inicial es la cantidad e hilos gracias a los
+     // procesos anteriores ocupamos que vaya decrementando hasta llegar
+     // a 0 
+      if count = 0 then
+      // Aqui hace un wait al torniquete 1 ya que antes lo habian
+      // dejado con un contador de 1 y lo ocupamos con un contador
+      // de 0
+        wait(turnstile1)
+      // Signal al torniquete 2 para que se levante la barrera         
+        signal(turnstile2)
+      end if
+    // Incrementa el acceso a contador para que los demas hilos sigan pasando        
+    signal(can_access_count)
+    // Barrera que hace que todos los hilos se queden esperando a que el ultimo
+    // hilo haga un signal    
+    wait(turnstile2)
+    // Este signal simula lo siguiente: EL ultimo hilo hace un signal y uno de los
+    // hilos que se encontraba metido en la barrera sale e incrementa el torniquete 2
+    // al incrementarlo en hilo anterior puede salir de la barrera e incrementa la del
+    // anterior y asi sucesivamente, hasta llegar al ultimo y el ultimo deja el contador
+    // del torniquete 2 en 1 por lo que se requiere hacer un wait en la linea 42     
+    signal(turnstile2)
+  end while
+end procedure

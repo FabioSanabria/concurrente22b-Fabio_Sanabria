@@ -1,0 +1,41 @@
+procedure main:
+// Crea el semaforo que revisa si a1 esta listo
+  shared a1_ready := create_semaphore(0)
+// Crea el semaforo que revisa si b1 esta listo
+  shared b1_ready := create_semaphore(0)
+// Crea el thread_a  
+  create_thread(thread_a)
+// Crea el thread_b  
+  create_thread(thread_b)
+end procedure  // Fin de main
+
+procedure thread_a:
+// El statement a1 se va a ejecutar
+  statement a1
+// Manda una señal al hilo b que indica que el statement a1
+// fue terminado con exito 
+  signal(a1_ready)
+// Luego de que se enviara la señal, el hilo a va a esperar a que
+// el hilo b mande otra señal indicando que la tarea b1 fue completada   
+  wait(b1_ready)
+// Statement a2 realizado si se ejecutaron primero el
+// statement a1 y b1    
+  statement a2
+end procedure
+
+procedure thread_b:
+// El statement b1 se va a ejecutar  
+  statement b1
+// Va a esperar a que a1 se ejecute primero, en
+// otras palabras, esta obligando a que el hilo a ejecute
+// primero la instruccion a1 para luego ejecutar ejecutar el
+// resto
+  wait(a1_ready)
+// Luego de que se ejecutara a1, el hilo b manda una señal
+// que indica que el statement b1 fue realizado para que
+// el hilo a continue con su ejecucion     
+  signal(b1_ready)
+// Statement b2 realizado si se ejecutaron primero el
+// statement a1 y b1  
+  statement b2
+end procedure
