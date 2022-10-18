@@ -4,6 +4,6 @@ Primera Tarea: Goldbach Serial
 
 Segunda Tarea: Goldbach_Pthreads
 
-Tercera Tarea: Por definir
+Tercera Tarea: Goldbach_Optimization
 
 Cuarta Tarea: Por definir
