@@ -147,19 +147,21 @@ void calcular_sumas(goldbach_t* elements) {
 
 void calcular_pares
   (goldbach_t *elements, int64_t num, int prime_count) {
-  bool array_sum_required = false;
-  if (elements->value < 0) {
-    array_sum_required = true;
+   bool array_sum_required = false;
+   if (elements->value < 0) {
+     array_sum_required = true;
   }
+
+  int64_t possible_prime = 0;
   for (int i = 0; i < prime_count; i++) {
-    for (int j = i; j < prime_count; j++) {
-      if (elements->array_primos.primo[i] +
-      elements->array_primos.primo[j] == num) {
+    possible_prime = num - elements->array_primos.primo[i];
+    if (esPrimo(possible_prime)) {
+      if (possible_prime >= elements->array_primos.primo[i]) {
         elements->cant_sum++;
         if (array_sum_required) {
           sumas_value_append(&elements->array_sum,
           elements->array_primos.primo[i],
-          elements->array_primos.primo[j], 0);
+          possible_prime, 0);
         }
       }
     }
