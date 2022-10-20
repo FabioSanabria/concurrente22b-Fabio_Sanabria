@@ -1,4 +1,4 @@
-// Goldbach_optimization program v1.7 Fabio Sanabria
+// Goldbach_optimization program v1.4 Fabio Sanabria
 // <fabio.sanabria@ucr.ac.cr>
 // Copyright [2022] <Fabio Sanabria>
 #include <assert.h>
@@ -38,7 +38,8 @@ typedef struct private {
  * @param goldbach puntero a objeto de tipo goldbach, debe ser distinto a NULL
  * @return int cantidad de primos
 */
-int calcular_primos(array_primos_t* array_primos, int64_t num);
+int calcular_primos(array_primos_t* array_primos,
+array_booleans_t* array_booleans, int64_t num);
 
 /**
  * @brief Lee los datos ingresados en entrada estandar
@@ -82,7 +83,6 @@ num, int prime_count);
 int create_threads(shared_data_t *shared_data);
 void* asignar_thread(void *data);
 size_t formula_bloque(int i, int D, int w);
-bool esPrimo(int64_t element);
 
 /** @brief Subrutina que imprime las sumas de goldbach
  * ya sea que soliciten las sumas o solo la cantidad de sumas
@@ -94,6 +94,9 @@ void print_par(const array_int64_t* array, int i);
 void print_impar(const array_int64_t* array, int i);
 void print_cant_sumas_numeros(const array_int64_t* array,
 const uint64_t array_size);
+
+bool esPrimo(int64_t numero);
+
 
 bool esPrimo(int64_t element) {
   bool resultado = false;
@@ -118,6 +121,7 @@ array_booleans_t* array_booleans, int64_t num) {
   for (int64_t i = 2; i < num; i++) {
     array_booleans_append(array_booleans, 1);
   }
+  // 0 significa que es primo, 1 significa que no es primo 
 	//Recorrer los números y para cada uno
 	for (int64_t i = 2; i < num; i++){
   //Si es primo recorrer los múltiplos y marcarlos como no primo
@@ -136,13 +140,12 @@ array_booleans_t* array_booleans, int64_t num) {
   return cont2;
 }
 
-
 void calcular_sumas(goldbach_t* elements) {
   int64_t num = labs(elements->value);
 
   int prime_count = calcular_primos
     (&elements->array_primos,
-    &elements->booleans, num);
+     &elements->array_booleans, num);
   if (num > 5) {
     if (elements->value % 2 == 0) {
       calcular_pares(elements, num, prime_count);
@@ -263,7 +266,7 @@ char* argv[]) {
   if (argc < 0 && argv[1]) {
     printf("no hay argumentos");
   }
-  printf("Escriba los numeros a procesar\n");
+
   int64_t value = 0;
   int contador = 0;
   while (fscanf(file, "%" PRId64, &value) == 1) {

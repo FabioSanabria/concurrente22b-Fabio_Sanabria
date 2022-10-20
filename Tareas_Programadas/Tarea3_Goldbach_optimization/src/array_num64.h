@@ -1,6 +1,6 @@
-// Goldbach_optimizado program v1.3 Fabio Sanabria Valerin
+// Goldbach_optimization program v1.4 Fabio Sanabria
 // <fabio.sanabria@ucr.ac.cr>
-// Copyright [2022] <Fabio Sanabria Valerin>
+// Copyright [2022] <Fabio Sanabria>
 #ifndef ARRAY_NUM64_H
 #define ARRAY_NUM64_H
 

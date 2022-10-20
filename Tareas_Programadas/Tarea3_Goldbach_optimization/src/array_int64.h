@@ -1,75 +1,63 @@
-// Goldbach_optimizado program v1.3 Fabio Sanabria Valerin
+// Goldbach_optimization program v1.4 Fabio Sanabria
 // <fabio.sanabria@ucr.ac.cr>
-// Copyright [2022] <Fabio Sanabria Valerin>
-#include <assert.h>
-#include <stdlib.h>
+// Copyright [2022] <Fabio Sanabria>
+#ifndef ARRAY_INT64_H
+#define ARRAY_INT64_H
+
+#include <stddef.h>
 #include <inttypes.h>
 
-#include "array_int64.h"
 #include "array_num64.h"
 
+
 /**
- * @brief Incrementa la capacidad del arreglo dinamicos
+ * @brief Estructura de datos goldbach
+ *  contiene los datos que pertenecen
+ * a cada valor ingresado
+*/
+typedef struct goldbach_array {
+  int64_t value;
+  int64_t cant_sum;
+  array_sum_t array_sum;
+  array_primos_t array_primos;
+  array_booleans_t array_booleans;
+}goldbach_t;
+
+/**
+ * @brief Estructura de datos array
+ *  array que contiene goldbach
+ * y sus elementos
+*/
+typedef struct {
+  size_t capacity;
+  size_t count;
+  goldbach_t* elements;
+}array_int64_t;
+
+/**
+ * @brief Constructor
  * @param array un puntero a un array,debe ser distinto a NULL
+ * @return void
+*/
+void array_int64_init(array_int64_t* array);
+
+/**
+ * @brief Destructor
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return void
+*/
+void array_int64_destroy(array_int64_t* array);
+
+/**
+ * @brief Coloca un numero dentro del array
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @param element el numero que se desea ingresar en el array
  * @return un codigo de error
  * EXIT_SUCCESS si se analizaron correctamente los datos
  * EXIT_FAILURE si no se analizan los datos correctamente
 */
-int goldbach_increase_capacity(array_int64_t *array);
+int array_int64_append(array_int64_t* array, int64_t element);
 
-void array_int64_init(array_int64_t *array) {
-  array->capacity = 0;
-  array->count = 0;
-  array->elements = NULL;
-}
 
-void array_int64_destroy(array_int64_t *array) {
-  for (size_t i = 0; i < array->count; i++) {
-    sumas_value_destroy(&array->elements[i].array_sum);
-    array_primos_destroy(&array->elements[i].array_primos);
-    array_booleans_destroy(&array->elements[i].array_booleans);
-  }
-  // se libera memoria
-  array->capacity = 0;
-  array->count = 0;
-  free(array->elements);
-  array->elements = NULL;
-}
 
-int array_int64_append(array_int64_t *array, int64_t num) {
-  int error = EXIT_SUCCESS;
-  if (array->count == array->capacity) {
-    error = goldbach_increase_capacity(array);
-  }
-  if (error == EXIT_SUCCESS) {
-    array->elements[array->count].value = num;
-    array->elements[array->count].cant_sum = 0;
-    sumas_value_init(&array->elements[array->count].array_sum);
-    array_primos_init(&array->elements[array->count].
-    array_primos);
-    array_booleans_init(&array->elements[array->count].
-    array_booleans);
-    array->count++;
-  }
-  return error;
-}
-
-/**
- * @brief Incrementa la capacidad del arreglo dinamicos
- * @param array un puntero a un array,debe ser distinto a NULL
- * @return un codigo de error
- * EXIT_SUCCESS si se analizaron correctamente los datos
- * EXIT_FAILURE si no se analizan los datos correctamente
-*/
-int goldbach_increase_capacity(array_int64_t *array) {
-  size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
-  goldbach_t *new_array = (goldbach_t *)realloc
-  (array->elements, new_capacity * sizeof(goldbach_t));
-
-  if (new_array) {
-    array->capacity = new_capacity;
-    array->elements = new_array;
-    return EXIT_SUCCESS;
-  }
-  return EXIT_FAILURE;
-}
+#endif  // ARRAY_INT64_H
