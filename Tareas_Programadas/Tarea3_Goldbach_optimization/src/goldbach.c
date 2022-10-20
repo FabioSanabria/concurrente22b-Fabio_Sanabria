@@ -82,6 +82,7 @@ num, int prime_count);
 int create_threads(shared_data_t *shared_data);
 void* asignar_thread(void *data);
 size_t formula_bloque(int i, int D, int w);
+bool esPrimo(int64_t element);
 
 /** @brief Subrutina que imprime las sumas de goldbach
  * ya sea que soliciten las sumas o solo la cantidad de sumas
@@ -94,40 +95,46 @@ void print_impar(const array_int64_t* array, int i);
 void print_cant_sumas_numeros(const array_int64_t* array,
 const uint64_t array_size);
 
-int calcular_primos(array_primos_t* array_primos, int64_t num) {
-	int i,j,n;
-	int numeros[num];
-  int cant_primes = 0;  
-	//Obtener las lista de números a evaluar
-	
-  for(i=2;i<num;i++){
-		numeros[i]=1;
-	}
-	
-	//Hacer 2 el primer número primo
-	numeros[2]=1;
- 
+bool esPrimo(int64_t element) {
+  bool resultado = false;
+  if (element >= 2) {
+    resultado = true;
+    double limite = sqrt((double)(element));
+    for (int i = 2; i <= limite; i++) {
+      if (element % i == 0) {
+        resultado = false;
+      }
+    }
+  }
+  return resultado;
+}
+
+int calcular_primos_calculadora(array_primos_t* array_primos,
+array_booleans_t* array_booleans, int64_t num) {
+  int cont2 = 0;
+  array_booleans_append(array_booleans, 0);  // 0
+  array_booleans_append(array_booleans, 0);  // 1
+  
+  for (int64_t i = 2; i < num; i++) {
+    array_booleans_append(array_booleans, 1);
+  }
+  // 0 significa que es primo, 1 significa que no es primo 
 	//Recorrer los números y para cada uno
-	for (n=2;n<num;n++){
-//Si es primo recorrer los múltiplos y marcarlos como no primo
-		if (numeros[n]){
-      array_primos_append(array_primos, num);
-      cant_primes++;
-			for (i=n*n;i<num;i+=n){
-				numeros[i] = 0;
+	for (int64_t i = 2; i < num; i++){
+  //Si es primo recorrer los múltiplos y marcarlos como no primo
+		if (array_booleans->boolean[i] == 1) {
+			for (int64_t j = i * i; j < num; j += i){
+				array_booleans->boolean[j] = 0;
 			}
 		}
 	}
-	  
-	//Muestro la lista de los primos	
-	printf("Primos: ");
-	for (n = 2; n < num; n++){
-		if (numeros[n]){
-			printf("%d  ",n);
-		}
-	}
-    
-	return cant_primes;
+    for (int64_t i = 2; i < num; i++) {
+      if (array_booleans->boolean[i] == 1) {
+        array_primos_append(array_primos, i);
+        cont2++; 
+      }
+  }
+  return cont2;
 }
 
 
@@ -135,7 +142,8 @@ void calcular_sumas(goldbach_t* elements) {
   int64_t num = labs(elements->value);
 
   int prime_count = calcular_primos
-    (&elements->array_primos, num);
+    (&elements->array_primos,
+    &elements->booleans, num);
   if (num > 5) {
     if (elements->value % 2 == 0) {
       calcular_pares(elements, num, prime_count);

@@ -1,4 +1,4 @@
-// Goldbach_pthread program v1.3 Fabio Sanabria Valerin
+// Goldbach_optimizado program v1.3 Fabio Sanabria Valerin
 // <fabio.sanabria@ucr.ac.cr>
 // Copyright [2022] <Fabio Sanabria Valerin>
 #include <assert.h>
@@ -27,6 +27,7 @@ void array_int64_destroy(array_int64_t *array) {
   for (size_t i = 0; i < array->count; i++) {
     sumas_value_destroy(&array->elements[i].array_sum);
     array_primos_destroy(&array->elements[i].array_primos);
+    array_booleans_destroy(&array->elements[i].array_booleans);
   }
   // se libera memoria
   array->capacity = 0;
@@ -46,6 +47,8 @@ int array_int64_append(array_int64_t *array, int64_t num) {
     sumas_value_init(&array->elements[array->count].array_sum);
     array_primos_init(&array->elements[array->count].
     array_primos);
+    array_booleans_init(&array->elements[array->count].
+    array_booleans);
     array->count++;
   }
   return error;
