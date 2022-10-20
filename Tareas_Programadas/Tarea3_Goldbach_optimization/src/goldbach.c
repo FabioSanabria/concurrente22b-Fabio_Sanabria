@@ -109,7 +109,7 @@ bool esPrimo(int64_t element) {
   return resultado;
 }
 
-int calcular_primos_calculadora(array_primos_t* array_primos,
+int calcular_primos(array_primos_t* array_primos,
 array_booleans_t* array_booleans, int64_t num) {
   int cont2 = 0;
   array_booleans_append(array_booleans, 0);  // 0
@@ -118,7 +118,6 @@ array_booleans_t* array_booleans, int64_t num) {
   for (int64_t i = 2; i < num; i++) {
     array_booleans_append(array_booleans, 1);
   }
-  // 0 significa que es primo, 1 significa que no es primo 
 	//Recorrer los números y para cada uno
 	for (int64_t i = 2; i < num; i++){
   //Si es primo recorrer los múltiplos y marcarlos como no primo
