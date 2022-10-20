@@ -172,23 +172,27 @@ num, int prime_count) {
   if (elements->value < 0) {
     array_sum_required = true;
   }
+
+  int64_t possible_prime = 0;
+
   for (int i = 0; i < prime_count; i++) {
     for (int j = i; j < prime_count; j++) {
-      for (int k = j; k < prime_count; k++) {
-        if (elements->array_primos.primo[i] +
-        elements->array_primos.primo[j] +
-        elements->array_primos.primo[k] == num) {
-          elements->cant_sum++;
-          if (array_sum_required) {
-            sumas_value_append(&elements->array_sum,
-            elements->array_primos.primo[i],
-            elements->array_primos.primo[j],
-            elements->array_primos.primo[k]);
-          }
+    possible_prime = num - elements->array_primos.primo[i] -
+    elements->array_primos.primo[j];
+    if (esPrimo(possible_prime)) {
+      if (possible_prime >= elements->array_primos.primo[i] && 
+          possible_prime >= elements->array_primos.primo[j]) {
+        elements->cant_sum++;
+        if (array_sum_required) {
+          sumas_value_append(&elements->array_sum,
+          elements->array_primos.primo[i],
+          elements->array_primos.primo[j],
+          possible_prime);
         }
       }
     }
-  }
+    }
+  }  
 }
 
 void goldbach_run(array_int64_t* goldbach, size_t thread_count, int argc,
