@@ -28,12 +28,12 @@ Si el usuario no provee el número de hilos, el programa usará por default la c
 
 ## Pseudo Código
 
-[goldbach_optimization pseudo codigo]( https://git.ucr.ac.cr/GENESIS.HERRERAKNYGHT/tarea1concurrente22a-genesis_herrera/-/blob/main/Tarea2/goldbach_pthread/design/goldbach_pthread.pseudo)
+[goldbach_optimization pseudo codigo](https://github.com/FabioSanabria/concurrente22b-Fabio_Sanabria/blob/main/Tareas_Programadas/Tarea3_Optimizacion/Tarea3_Goldbach_optimization/design/goldbach_dinamic.pseudo)
 
 
 ## Reporte
 
-[Documento de reporte]( https://git.ucr.ac.cr/GENESIS.HERRERAKNYGHT/tarea1concurrente22a-genesis_herrera/-/blob/main/Tarea3/goldbach_optimization/report/Readme.ext)
+[Documento de reporte]( https://github.com/FabioSanabria/concurrente22b-Fabio_Sanabria/tree/main/Tareas_Programadas/Tarea3_Optimizacion/Tarea3_Goldbach_optimization/report)
 
-## Exel de mediciones
-[Exel de mediciones]( https://git.ucr.ac.cr/GENESIS.HERRERAKNYGHT/tarea1concurrente22a-genesis_herrera/-/blob/main/Tarea3/goldbach_optimization/design/Comparaciones.xlsx)
+## perf_measure_tarea03
+[Excel con los tiempos]( https://github.com/FabioSanabria/concurrente22b-Fabio_Sanabria/blob/main/Tareas_Programadas/Tarea3_Optimizacion/Tarea3_Goldbach_optimization/design/perf_measure_tarea03.xlsx)
