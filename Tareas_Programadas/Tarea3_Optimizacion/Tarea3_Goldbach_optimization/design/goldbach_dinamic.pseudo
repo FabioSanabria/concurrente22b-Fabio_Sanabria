@@ -1,4 +1,5 @@
-// Goldbach_pthread pseudo codigo v1.3 Génesis Herrera Knyght <genesis.herreraknyght@ucr.ac.cr>
+// Goldbach_pthread pseudo codigo v1.3 Fabio Sanabria Valerin
+<fabio.sanabria@ucr.ac,cr>
 procedure main(argc,argv[])
     thread_count := integer(argv[1])
     for thread_number := 0 para thread_count do 
