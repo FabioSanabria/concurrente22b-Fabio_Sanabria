@@ -7,7 +7,7 @@
 En el diagrama mostrado a continuación se muestran las distintas decisiones que debe tomar el programa respecto a los números que ingrese el usuario y los hilos que se creen.  
 Se presenta en el diagrama *un número compuesto de al menos dos potencias, un número primo y un número inválido*, esto para ejemplificar con mayor claridad los resultados de las decisiones tomadas de acuerdo al número que reciba el programa:
 
-![Marcado 1](./images/Diagrama_flujo_goldbach.png)
+![Marcado 1](../images/Diagrama_flujo_goldbach.png)
 
 ## Diagrama UML secuencial pthread
 
@@ -24,7 +24,7 @@ En caso de que el número digitado no sea un entero el programa se detendrá. En
 Si el usuario no provee el número de hilos, el programa usará por default la cantidad de CPU's que posea el equipo.  
 
 
-![Marcado 1](./images/Secuencial_UML_goldbach.png)
+![Marcado 1](../images/Secuencial_UML_goldbach.png)
 
 ## Pseudo Código
 
