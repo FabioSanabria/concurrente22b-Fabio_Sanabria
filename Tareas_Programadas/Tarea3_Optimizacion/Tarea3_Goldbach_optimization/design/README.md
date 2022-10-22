@@ -26,6 +26,13 @@ Si el usuario no provee el número de hilos, el programa usará por default la c
 
 ![Marcado 1](../images/Secuencial_UML_goldbach.png)
 
+## Diagrama de clases
+
+El diagrama es el mismo que el de la tarea pasada ya que sigue la misma estructura, no obstante, ahora la tarea esta bien modularizada haciendo que goldbach.c no tenga tanta responsabilidad, en el diagrama aparece que goldbach hace muchas tareas y en parte tiene razon ya que goldbach.c es el que llama a todas las demas clases que hacen los calculos de las sumas y las impresiones de los numeros, no obstante, ya no lo hace de manera directa. Goldbach.c lo que hace de manera directa es la creaciond de los hilos y la division de los trabajos utilizando mapeo dinamico para aumentar la velocidad
+
+
+![Marcado 1](../images/Diagrama_de_clases.jpg)
+
 ## Pseudo Código
 
 [goldbach_optimization pseudo codigo](https://github.com/FabioSanabria/concurrente22b-Fabio_Sanabria/blob/main/Tareas_Programadas/Tarea3_Optimizacion/Tarea3_Goldbach_optimization/design/goldbach_dinamic.pseudo)
