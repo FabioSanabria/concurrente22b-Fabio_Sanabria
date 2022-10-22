@@ -1,0 +1,93 @@
+// Goldbach_serial pseudo codigo v1.5 Fabio Andrés Sanabria Valerin <fabio.sanabria@ucr.ac.cr>
+procedure main()
+    init golbach  // Al the procedures of goldbach
+    call destructor  // Free all the memory 
+    
+end procedure
+
+procedure get_data(datos)
+    array numbers
+    if (correct numbers) {
+        store the numbers into the array
+    } else {
+        print "There was an error in reading"
+    }
+    endif
+    return numeros
+    
+end procedure
+
+procedure calculate_primes(number)
+    array primes
+    for (i = 0; i must to be less than number; i++) { do
+            
+        calculate all the primes before number
+        take all the primes, store into the array 
+        no matter the number
+    }
+    end for
+    return primes
+end procedure
+
+procedure calculate_sums(calculate_primes(), number)
+    array sums
+    int cant_sum
+    if (number is bigger than 5) {
+        if (pair number) {
+            use the strong conjeure.
+            get the primes array.
+            calculate all the posible numbers.
+            
+            if the combination of numbers give us the
+            number we need.
+
+            cant_summ increase 1.
+
+            then store that combination of 2 numbers into sums
+        } else {
+            // the number is odd
+            use the weak conjeure
+            get the primes array.
+            calculate all the posible numbers.
+            
+            if the combination of numbers give us the
+            number we need.
+
+            cant_sum increase 1.
+
+            then store that combination of 3 numbers into sums
+        }
+        endif
+    } else {
+        nothing is added to sums
+        cant_sum = cant_sum + 0
+    }
+    // The sums array contains all the 
+    // sums of the numbers that the user
+    // puts in the standard input
+    return sums
+end procedure
+
+procedure print_sums(register goldbach)
+    while (goldbach values isn't NULL) { do
+        if(the number is positive) {
+            if (the number is pair) {
+                only print the number and the cant_sum
+                mov+2 spaces of the sums array
+            }
+            if (the number is odd) {
+                only print the number and the cant_sum
+                mov+3 spaces of the sums array
+            }
+        } else {
+            if (the number is pair) {
+                print the number, cant_sums and sums
+                mov+2 spaces of the sums array
+            }    
+            if (the number is odd) {
+                print the number, cant_sums and sums
+                mov+3 spaces of the sums array
+            }
+        }
+    } end while  
+end procedure
