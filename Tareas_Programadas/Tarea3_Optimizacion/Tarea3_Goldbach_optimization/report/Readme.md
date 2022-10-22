@@ -72,20 +72,20 @@
 
 En el siguiente cuadro aparecen las duraciones de cada una de las tareas realizadas, desde la serial hasta la optimizada, y se puede observar que la mas lenta de todas es la optimizada #1 con mapeo dinamico, y se preguntara, ¿Porque si la optimizada usa concurrencia y uno de los mapeos mas poderosos, es la mas lenta?, bueno la respuesta es que la **tarea 1 (Goldbach Serial)** y **tarea 2 (Goldbach Pthread)** fueron optimizadas utilizando **Cribas y reduccion de ciclos** haciendo que el programa sea mucho mas rapido que la optimizacion #1 que solo tiene mapeo dinamico, no obstante esto  cambia cuando llegamos a la **optimizacion #2** que es cuando el mapeo dinamico es acompañado de las optimizaciones seriales, gracias a ellas, la tarea 3 es la mas rapida de todas con diferencia ya que tiene todas las optimizaciones posibles y herramientas que hacen al programa mucho mas rapido. Para lograr ver el comportamiento de cada uno de las tareas optimizadas se utilizo el input020 de los casos medios, el cual es uno de los casos mas extensos que hay y donde se puede comparar mucho mas facil todos y cada uno de los programas. **Nota: Se optimizo la tarea 1 y la tarea 2 ya que el profesor Alberto nos dijo que para comparar los tiempos y evitar que las eficiencias en el cuadro comparativo sean mayores a 1, todas las tareas debian de tener las mismas condiciones optimizadas, es decir, la tarea 1 debia de tener la criba y la disminucion de los ciclos al igual que la tarea 2, entonces se esta comparando la version serial vs concurrencia con mapeo dinamico vs cocurrencia con mapeo estatico**
 
-![Marcado 1](/images/Cuadro_comparativo.jpg)
+![Marcado 1](../images/Cuadro_comparativo.jpg)
 
 En la siguiente grafica podemos obsevar el tiempo y la velocidad de todas las implementaciones de goldbach y se puede observar que la mas rapida de todas es la optimizacion #2 y la mas lenta es la optimizacion #1, debido a lo que se explico anteriormente **(La linea azul simboliza el tiempo de las implementaciones y la linea naranja simboliza la velocidad que tiene cada una de las implementaciones realizadas)**
 
-![Marcado 1](/images/comparacion1.jpg)
+![Marcado 1](../images/comparacion1.jpg)
 
 En la siguiente grafica podemos observar un contraste entre la velocidad y la eficiencia de cada algoritmo, podemos tomar a la serial como un punto medio y los demas como variaciones del tiempo y eficiencia, como explico el profesor Jeisson Hidalgo en uno de sus videos, nadie le puede ganar a la version serial en eficiencia ya que es la cuspide de la eficiencia, no hay nada mas eficiente que la serial ya que utiliza todos los recursos que tiene al maximo debido a que todos los procesos los hace un unico hilo, a diferencia de su contraparte concurrente que algunos hilos tienen mas tareas que otros y a veces gastan bastantes recursos. **(La linea azul simboliza el speed up de la implementacion y la linea naranja simboliza la eficiencia que tiene cada una de las implementaciones realizadas)**
 
 
-![Marcado 1](/images/comparacion2.jpg)
+![Marcado 1](../images/comparacion2.jpg)
 
 Y por ultimo tenemos el grafico 3 que como su nombre nos indica, nos permite observar el grado de concurrencia ideal que necesitamos ya que utilizar muchos hilos no es tan efectivo como mucha gente lo cree, debido a que va a haber un punto en donde no vale la pena gastar tantos recursos por un incremento minusculo de desempeño. Entonces el grafico toma todos los tiempos que dio la tarea 3 optimizada al crear diversa cantidad de hilos y va revisando el speed up y la eficiencia para encontar un punto lo mas equilibrado y beneficioso posible. En este caso, el punto que considero es el mas apropiado para esta tarea es cuando el usuario pide utilizar 8 hilos ya que otorga un incremento de velocidad bastante bueno y la eficiencia es bastante buena en comparacion a otros tiempos que utilizan 12 y 32 hilos.**(La linea azul simboliza el speed up de la implementacion al usar X cantidad de hilos y la linea naranja simboliza la eficiencia que tiene al utilizar X cantidad de hilos)**
 
-![Marcado 1](/images/comparacion3.jpg)
+![Marcado 1](../images/comparacion3.jpg)
 
 ## KCachegrind
 
@@ -93,15 +93,15 @@ Como se puede ver en las siguientes imagenes, el kcachegrind nos indica los luga
 
 ## Imagen 1 de Kcachegrind
 
-![Marcado 1](/images/kcachegrind1.jpeg)
+![Marcado 1](../images/kcachegrind1.jpeg)
 
 ## Imagen 2 de Kcachegrind
 
-![Marcado 1](/images/kcachegrind2.jpeg)
+![Marcado 1](../images/kcachegrind2.jpeg)
 
 ## Imagen 3 de Kcachegrind
 
-![Marcado 1](/images/kcachegrind3.jpeg)
+![Marcado 1](../images/kcachegrind3.jpeg)
 
 KCachegrind permite encontrar rápida y visualmente las líneas de código fuente que consumen más recursos de los procesadores, esto nos permite localizar las subrutinas del codigo que necesitan ser pulidas para resucir su tiempo de ejecucion y consumo de recursos.
 
