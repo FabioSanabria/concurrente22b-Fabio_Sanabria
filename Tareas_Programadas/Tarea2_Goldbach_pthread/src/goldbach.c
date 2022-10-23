@@ -16,6 +16,9 @@
 #include "array_int64.h"
 #include "array_num64.h"
 #include "goldbach.h"
+#include "calculadora.h"
+#include "salida.h"
+#include "entrada.h"
 
 
 /** @struct shared_data_t
@@ -61,10 +64,12 @@ typedef struct private {
  * alli es donde se va a guardar los respectivos numeros
  * primos
  * @param num Numero ingresado por el usuario
+ * @param array_booleans Array de booleanos para poder
+ * obtener los numeros primos
  * @return int cantidad de primos que tiene el array
 */
-int calcular_primos(array_primos_t* array_primos, int64_t num);
-
+int calcular_primos(array_primos_t* array_primos,
+array_booleans_t* array_booleans, int64_t num);
 /**
  * @brief Lee los datos ingresados en entrada estandar dados por el usuario,
  * ademas puede agarrar numeros dados por algun archivo de texto
@@ -197,86 +202,14 @@ void print_impar(const array_int64_t* array, int i);
 void print_cant_sumas_numeros(const array_int64_t* array,
 const uint64_t array_size);
 
-int calcular_primos(array_primos_t* array_primos, int64_t num) {
-  int cont2 = 0;
-  // inicio subrutina que busca los primos y los mete en un array
-      for (int m = 1; m < num; m++) {  // crea los numeros a ser probados
-        int contador = 0;
-        for (int j = m; j > 0; j--) {  // revisa si es un numero primo
-          if (m % j == 0) {  // si es primo entra e incrementa el contador
-            contador++;
-          }
-        }
-        if (contador == 2) {
-          array_primos_append(array_primos, m);
-          cont2++;
-          // introduce el numero primo
-          // en el array de numeros primos del hilo
-        }
-      }
-      // fin de subrutina
-  return cont2;
+int calcular_primos(array_primos_t* array_primos,
+array_booleans_t* array_booleans, int64_t num) {
+  return calcular_primos_calculadora(array_primos, array_booleans,
+  num);
 }
-
 
 void calcular_sumas(goldbach_t* elements) {
-  int64_t num = labs(elements->value);
-
-  int prime_count = calcular_primos
-    (&elements->array_primos, num);
-  if (num > 5) {
-    if (elements->value % 2 == 0) {
-      calcular_pares(elements, num, prime_count);
-    } else {
-      calcular_impares(elements, num, prime_count);
-    }
-  }
-}
-
-void calcular_pares
-  (goldbach_t *elements, int64_t num, int prime_count) {
-  bool array_sum_required = false;
-  if (elements->value < 0) {
-    array_sum_required = true;
-  }
-  for (int i = 0; i < prime_count; i++) {
-    for (int j = i; j < prime_count; j++) {
-      if (elements->array_primos.primo[i] +
-      elements->array_primos.primo[j] == num) {
-        elements->cant_sum++;
-        if (array_sum_required) {
-          sumas_value_append(&elements->array_sum,
-          elements->array_primos.primo[i],
-          elements->array_primos.primo[j], 0);
-        }
-      }
-    }
-  }
-}
-
-void calcular_impares(goldbach_t *elements, int64_t
-num, int prime_count) {
-  bool array_sum_required = false;
-  if (elements->value < 0) {
-    array_sum_required = true;
-  }
-  for (int i = 0; i < prime_count; i++) {
-    for (int j = i; j < prime_count; j++) {
-      for (int k = j; k < prime_count; k++) {
-        if (elements->array_primos.primo[i] +
-        elements->array_primos.primo[j] +
-        elements->array_primos.primo[k] == num) {
-          elements->cant_sum++;
-          if (array_sum_required) {
-            sumas_value_append(&elements->array_sum,
-            elements->array_primos.primo[i],
-            elements->array_primos.primo[j],
-            elements->array_primos.primo[k]);
-          }
-        }
-      }
-    }
-  }
+  calcular_sumas_calculadora(elements);
 }
 
 void goldbach_run(array_int64_t* goldbach, size_t thread_count, int argc,
@@ -341,20 +274,9 @@ int create_threads(shared_data_t *shared_data, size_t task_amount) {
 
 int goldbach_recibir_datos(array_int64_t *array, FILE *file, int argc,
 char* argv[]) {
-  assert(array);
-  assert(file);
-  if (argc < 0 && argv[1]) {
-    printf("no hay argumentos");
-  }
-  // printf("Ingrese los numeros que desea procesar\n");
-  int64_t value = 0;
-  int contador = 0;
-  while (fscanf(file, "%" PRId64, &value) == 1) {
-    ++contador;
-    array_int64_append(array, value);
-  }
-  return contador;
+  return goldbach_recibir_datos_entrada(array, file, argc, argv);
 }
+
 
 void* asignar_thread(void* data) {
   private_data_t* private_data = (private_data_t*) data;
@@ -366,79 +288,6 @@ void* asignar_thread(void* data) {
   return NULL;
 }
 
-void print_cant_sumas_numeros(const array_int64_t* array,
-const uint64_t array_size) {
-  int64_t cant_sumas = 0;
-  int64_t cant_numeros = (int64_t)array_size;
-  for (uint64_t i = 0; i < array_size; i++) {
-    if (array->elements[i].value == 4 || array->elements[i].value == -4) {
-      ++cant_sumas;
-    } else {
-      cant_sumas += array->elements[i].cant_sum;
-    }
-  }
-  printf("Total " "%"PRId64 " numbers " "%"PRId64 " sums\n\n",
-  cant_numeros, cant_sumas);
-}
-
 void goldbach_print(const array_int64_t* array, const uint64_t array_size) {
-  print_cant_sumas_numeros(array, array_size);
-  for (uint64_t i = 0; i < array_size; i++) {
-    int64_t num = labs(array->elements[i].value);
-
-    printf("%" PRId64 ": ", array->elements[i].value);
-    if (0 <= num && num <= 5) {
-      if (array->elements[i].value == 4) {
-        printf("1 sums");
-      } else {
-        if (array->elements[i].value == -4) {
-          printf("1 sums: 2 + 2");
-        } else {
-          printf("NA");
-        }
-      }
-    } else {
-      if (array->elements[i].value < 0) {
-        printf("%" PRId64 " sums: ", array->elements[i].cant_sum);
-        if (array->elements[i].value % 2 == 0) {
-          print_par(array, i);
-        } else {
-          print_impar(array, i);
-        }
-      } else {
-        printf("%" PRId64 " sums ", array->elements[i].cant_sum);
-      }
-    }
-    printf("\n");
-  }
-}
-
-void print_par(const array_int64_t* array, int i) {
-  for (int j = 0; j < array->elements[i].cant_sum; j++) {
-    if ( j ==  array->elements[i].cant_sum - 1 ) {
-      printf("%" PRId64 " + %" PRId64, array->elements[i].array_sum.
-      sumas_value[j].num1, array->elements[i].array_sum.sumas_value
-      [j].num2);
-    } else {
-      printf("%" PRId64 " + %" PRId64 ", ", array->elements[i].
-      array_sum.sumas_value[j].num1, array->elements[i].array_sum.
-      sumas_value[j].num2);
-    }
-  }
-}
-
-void print_impar(const array_int64_t* array, int i) {
-  for (int j = 0; j < array->elements[i].cant_sum; j++) {
-    if ( j == array->elements[i].cant_sum - 1 ) {
-      printf("%" PRId64 " + %" PRId64 " + %" PRId64, array->elements[i]
-      .array_sum.sumas_value[j].num1, array->elements[i].array_sum.
-      sumas_value[j].num2, array->elements[i].array_sum.sumas_value
-      [j].num3);
-    } else {
-      printf("%" PRId64 " + %" PRId64 " + %" PRId64 ", ",
-      array->elements[i].array_sum.sumas_value[j].num1,
-      array->elements[i].array_sum.sumas_value[j].num2,
-      array->elements[i].array_sum.sumas_value[j].num3);
-    }
-  }
+  goldbach_print_salida(array, array_size);
 }

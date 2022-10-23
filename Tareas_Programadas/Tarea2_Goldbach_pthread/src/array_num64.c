@@ -1,4 +1,4 @@
-// Goldbach_pthread program v1.3 Fabio Sanabria Valerin
+// Goldbach_optimizado program v1.3 Fabio Sanabria Valerin
 // <fabio.sanabria@ucr.ac.cr>
 // Copyright [2022] <Fabio Sanabria Valerin>
 #include <assert.h>
@@ -8,27 +8,6 @@
 #include "array_int64.h"
 #include "array_num64.h"
 
-// Private
-
-/**
- * @brief Incrementa la capacidad del arreglo dinamico de sumas
- * @param array un puntero a un array de sumas,
- * debe ser distinto a NULL
- * @return un codigo de error
- * EXIT_SUCCESS si se analizaron correctamente los datos
- * EXIT_FAILURE si no se analizan los datos correctamente
-*/
-int sumas_value_increase_capacity(array_sum_t *array);
-
-/**
- * @brief Incrementa la capacidad del arreglo dinamico de primos
- * @param array un puntero a un array dde primos,
- * debe ser distinto a NULL
- * @return un codigo de error
- * EXIT_SUCCESS si se analizaron correctamente los datos
- * EXIT_FAILURE si no se analizan los datos correctamente
-*/
-int array_primos_increase_capacity(array_primos_t* array);
 
 void sumas_value_init(array_sum_t *array) {
   array->capacity = 0;
@@ -43,6 +22,13 @@ void sumas_value_destroy(array_sum_t *array) {
   array->sumas_value = NULL;
 }
 
+/**
+ * @brief Incrementa la capacidad del arreglo dinamicos
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
+*/
 int sumas_value_increase_capacity(array_sum_t *array) {
   size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
   sumas_value_t *new_array =
@@ -85,6 +71,13 @@ void array_primos_destroy(array_primos_t* array) {
   array->primo = NULL;
 }
 
+/**
+ * @brief Incrementa la capacidad del arreglo dinamicos
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
+*/
 int array_primos_increase_capacity(array_primos_t* array) {
   size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
   int64_t* new_array = (int64_t*)
@@ -109,5 +102,46 @@ int array_primos_append(array_primos_t*array, int64_t num) {
   return error;
 }
 
+void array_booleans_init(array_booleans_t* array) {
+  array->capacity = 0;
+  array->count = 0;
+  array->boolean = NULL;
+}
 
+void array_booleans_destroy(array_booleans_t* array) {
+  array->capacity = 0;
+  array->count = 0;
+  free(array->boolean);
+  array->boolean = NULL;
+}
 
+/**
+ * @brief Incrementa la capacidad del arreglo dinamicos
+ * @param array un puntero a un array,debe ser distinto a NULL
+ * @return un codigo de error
+ * EXIT_SUCCESS si se analizaron correctamente los datos
+ * EXIT_FAILURE si no se analizan los datos correctamente
+*/
+int array_booleans_increase_capacity(array_booleans_t* array) {
+  size_t new_capacity = 10 * (array->capacity ? array->capacity : 1);
+  int64_t* new_array = (int64_t*)
+    realloc(array->boolean, new_capacity * sizeof(int64_t));
+  if (new_array) {
+    array->capacity = new_capacity;
+    array->boolean = new_array;
+    return EXIT_SUCCESS;
+  }
+  return EXIT_FAILURE;
+}
+
+int array_booleans_append(array_booleans_t*array, int64_t num) {
+  int error = EXIT_SUCCESS;
+  if (array->count == array->capacity) {
+    error = array_booleans_increase_capacity(array);
+  }
+  if (error == EXIT_SUCCESS) {
+    array->boolean[array->count] = num;
+    array->count++;
+  }
+  return error;
+}
