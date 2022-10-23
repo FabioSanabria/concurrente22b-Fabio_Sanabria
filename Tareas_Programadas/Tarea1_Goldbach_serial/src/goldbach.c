@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
 #include "array_int64.h"
 #include "goldbach.h"
 
@@ -18,6 +19,7 @@ typedef struct goldbach {
   array_int64_t cant_sum;  // total of goldbach sums
   array_int64_t sums;  // numbers of the goldabch sums if the number is negative
   array_int64_t primes_nums;  // prime numbers before
+  array_int64_t booleans;
   // an especific number used to the sums
 } goldbach_t;
 
@@ -72,9 +74,26 @@ void calculate_sums(goldbach_t* goldbach);
 */
 void goldbach_print(const goldbach_t* goldbach);
 
+/**
+ * @brief Subrutina que revisa si el numero que es enviado es un numero primo
+ * o no
+ * @param elements numero el cual se quiere saber si es primo o no
+ * @return bool true si es primo y false si no es primo
+*/
+bool esPrimo(int64_t element);
 
-
-
+bool esPrimo(int64_t element) {
+  bool resultado = false;
+  if (element >= 2) {
+    resultado = true;
+    for (int i = 2; i <= element / 2; i++) {
+      if (element % i == 0) {
+        resultado = false;
+      }
+    }
+  }
+  return resultado;
+}
 
 goldbach_t* goldbach_create(void) {
   goldbach_t* goldbach = (goldbach_t*)
@@ -102,20 +121,28 @@ void goldbach_destroy(goldbach_t* goldbach) {
 void calculate_primes(goldbach_t* goldbach, int num) {
   assert(goldbach);
   array_int64_init(&goldbach->primes_nums);
-  // Method that search the prime numbers before a number chose by a user
-      for (int m = 1; m < num; m++) {  // Cycle that sees all the numbers
-        int contador = 0;
-        for (int j = m; j > 0; j--) {  // Cycle that sees if the number is prime
-          if (m % j == 0) {
-            contador++;
-          }
-        }
-        if (contador == 2) {
-          array_int64_append(&goldbach->primes_nums, m);
-          // add the number into the prime array
-        }
+  array_int64_init(&goldbach->booleans);
+  array_int64_append(&goldbach->booleans, 0);
+  array_int64_append(&goldbach->booleans, 0);
+
+  for (int64_t i = 2; i < num; i++) {
+    array_int64_append(&goldbach->booleans, 1);
+  }
+  // 0 significa que es primo, 1 significa que no es primo
+  // Recorrer los números y para cada uno
+  for (int64_t i = 2; i < num; i++) {
+  // Si es primo recorrer los múltiplos y marcarlos como no primo
+    if (goldbach->booleans.elements[i] == 1) {
+      for (int64_t j = i * i; j < num; j += i) {
+        goldbach->booleans.elements[j] = 0;
       }
-      // END of calculate
+    }
+  }
+    for (int64_t i = 2; i < num; i++) {
+      if (goldbach->booleans.elements[i] == 1) {
+        array_int64_append(&goldbach->primes_nums, i);
+      }
+  }
 }
 
 void calculate_sums(goldbach_t* goldbach) {
@@ -132,58 +159,44 @@ void calculate_sums(goldbach_t* goldbach) {
       // (1,3,5,7) y (6)
       // Search if this can be better
       if (num % 2 == 0) {  // if this is a pair
+        int64_t possible_prime = 0;
         for (size_t j = 0; j < goldbach->primes_nums.count
-         && (goldbach->primes_nums.elements[j]) <=
-          num / 2; j++) {  // as long as j
-          // is less than the size of the array
-          // and the prime number is less than or
-          // equal to the num/2, continue the
-          // cycle
-          for (size_t k = j; k < goldbach->primes_nums.count
-           && (goldbach->primes_nums.elements[k]) <
-            num; k++ ) {
-            if (goldbach->primes_nums.elements[j] +
-             goldbach->primes_nums.elements[k] == num) {
-              cant_sum++;
-              // if the sum of each elements is the number
-              // we save this nums in the array sums
-              array_int64_append(&goldbach->sums,
-               goldbach->primes_nums.elements[j]);
-              array_int64_append(&goldbach->sums,
-               goldbach->primes_nums.elements[k]);
+        ; j++) {
+          possible_prime = num - goldbach->primes_nums.elements[j];
+          if (esPrimo(possible_prime)) {
+            if (possible_prime >= goldbach->primes_nums.elements[j]) {
+            cant_sum++;
+          array_int64_append(&goldbach->sums,
+            goldbach->primes_nums.elements[j]);
+            array_int64_append(&goldbach->sums,
+            possible_prime);
             }
           }
-        }
+       }
         // And then we pass the cant of sums into the array of sums
         array_int64_append(&goldbach->cant_sum, cant_sum);
         cant_sum = 0;  // reset to be used again
       } else {  // case of odd numbers
-          // while a is less than the array of primes lenght
-          // and see if the element is less than the element / 2
-          // this is for optimize something
-          for (size_t a = 0; a < goldbach->primes_nums.count
-           && (goldbach->primes_nums.elements[a]) <
-            (num-1) / 2; a++) {  // sum "1" + 3 + 5
-            for (size_t b = a; b < goldbach->primes_nums.count
-             && (goldbach->primes_nums.elements[b])
-             < num; b++) {  // sum 1 + "3" + 5
-              for (size_t c = b; c < goldbach->primes_nums.count &&
-               (goldbach->primes_nums.elements[c]) < num; c++) {
-                // sum 1 + 3 + "5"
-                if (goldbach->primes_nums.elements[a] +
-                 goldbach->primes_nums.elements[b] +
-                  goldbach->primes_nums.elements[c] == num) {
+        int64_t possible_prime = 0;
+          // sum "1" + 3 + 5
+          for (size_t a = 0; a < goldbach->primes_nums.count; a++) {
+            for (size_t b = a; b < goldbach->primes_nums.count; b++) {
+              possible_prime = num - goldbach->primes_nums.elements[a] -
+              goldbach->primes_nums.elements[b];
+              if (esPrimo(possible_prime)) {
+                if (possible_prime >=  goldbach->primes_nums.elements[a] &&
+                possible_prime >=  goldbach->primes_nums.elements[b]) {
                   cant_sum++;
-                // Sees if the sum of the 3 elements is the number
-                // if it is correct append to the sums 3 nums
+
                   array_int64_append(&goldbach->sums,
-                   goldbach->primes_nums.elements[a]);
+                  goldbach->primes_nums.elements[a]);
+
                   array_int64_append(&goldbach->sums,
-                   goldbach->primes_nums.elements[b]);
+                  goldbach->primes_nums.elements[b]);
+
                   array_int64_append(&goldbach->sums,
-                   goldbach->primes_nums.elements[c]);
+                  possible_prime);
                 }
-                // array_int64_destroy(&goldbach->primes_nums);
               }
             }
           }
@@ -195,6 +208,7 @@ void calculate_sums(goldbach_t* goldbach) {
       array_int64_append(&goldbach->cant_sum, 0);
     }
       array_int64_destroy(&goldbach->primes_nums);  // Destroy the primes array
+      array_int64_destroy(&goldbach->booleans);
   }
 }
 
