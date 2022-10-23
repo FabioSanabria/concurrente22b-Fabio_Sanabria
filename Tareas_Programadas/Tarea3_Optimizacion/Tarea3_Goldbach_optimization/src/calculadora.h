@@ -62,7 +62,7 @@ void calcular_sumas_calculadora(goldbach_t* elements);
 /**
  * @brief Subrutina que revisa si el numero que es enviado es un numero primo
  * o no
- * @param elements numero el cual se quiere saber si es primo o no
+ * @param element numero el cual se quiere saber si es primo o no
  * @return bool true si es primo y false si no es primo
 */
 bool esPrimo(int64_t element);

@@ -26,6 +26,7 @@ typedef struct shared shared_data_t;
  * @param goldbach puntero a objeto de tipo goldbach, debe ser distinto a NULL
  * @param argc cantidad de argumentos ingresados enentrada estandar
  * @param argv un arreglo con los datos ingresados de entrada estandar
+ * @param thread_count Cantidad de hilos que ha ingresado el usuario
  * @return un codigo de error
  * EXIT_SUCCESS si se analizaron correctamente los datos
  * EXIT_FAILURE si no se analizan los datos correctamente

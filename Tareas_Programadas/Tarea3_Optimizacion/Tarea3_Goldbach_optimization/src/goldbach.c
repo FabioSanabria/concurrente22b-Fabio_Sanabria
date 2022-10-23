@@ -72,9 +72,9 @@ array_booleans_t* array_booleans, int64_t num);
 /**
  * @brief Subrutina que llama a otra subrutina que se encuentra en entrada.h
  * para lograr recibir los valores metidos por el usuario
- * @param goldbach puntero a objeto de tipo goldbach, debe ser distinto a NULL
+ * @param array puntero a objeto de tipo goldbach, debe ser distinto a NULL
  * @param file un puntero a un archivo de texto
- * @param arc Cantidad de argumento que ha metido el usuario
+ * @param argc Cantidad de argumento que ha metido el usuario
  * @param argv Los argumentos que metio el usuario para usar en el
  * programa
  * @return un codigo de error
@@ -87,7 +87,7 @@ char* argv[]);
 /**
  * @brief Subrutina que llama a otra subrutina que se encuentra en calculadora.h
  * que calcula las sumas de goldbach
- * @param goldbach puntero a objeto de tipo goldbach, debe ser distinto a NULL
+ * @param elements puntero a objeto de tipo goldbach, debe ser distinto a NULL
  * @return void
 */
 void calcular_sumas(goldbach_t* elements);
@@ -118,7 +118,8 @@ void* asignar_thread(void *data);
 /** @brief Subrutina que llama a otra subrutina que vive en salida.h
  *  que imprime las sumas de goldbach de todos los numeros ingresados
  * ya sea que soliciten las sumas o solo la cantidad de sumas
- * @param goldbach puntero a objeto de tipo goldbach, debe ser distinto a NULL
+ * @param array puntero a objeto de tipo goldbach, debe ser distinto a NULL
+ * @param array_size Tamano del arreglo goldbach
  * @return void
 */
 void goldbach_print(const array_int64_t* array, const uint64_t array_size);
