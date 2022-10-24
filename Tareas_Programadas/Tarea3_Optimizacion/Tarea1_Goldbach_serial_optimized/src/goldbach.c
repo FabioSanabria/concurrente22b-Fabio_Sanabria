@@ -86,7 +86,6 @@ bool esPrimo(int64_t element) {
   bool resultado = false;
   if (element >= 2) {
     resultado = true;
-    double limite = sqrt((double)(element));
     for (int i = 2; i <= element / 2; i++) {
       if (element % i == 0) {
         resultado = false;
