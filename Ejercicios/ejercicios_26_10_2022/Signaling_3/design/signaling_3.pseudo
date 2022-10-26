@@ -1,0 +1,28 @@
+procedure main:
+  shared a1_ready := create_semaphore(0) // can_run_b1
+  shared b1_ready := create_semaphore(0) // can_run c1
+  create_thread(thread_a)  // Se crea el hilo a
+  create_thread(thread_b)  // Se crea el hilo b
+  create_thread(thread_c)  // Se crea el hilo c
+end procedure
+
+procedure thread_a:
+  statement a1  // Se hace primero a1
+  signal(a1_ready)  // a1 manda senal a b1 de que ya termino
+end procedure
+
+procedure thread_b:
+// Cuando a1 ya esta lista entonces se ejecuta b1
+  wait(a1_ready)
+  statement b1
+// Manda senal al hilo c de que ya termino  
+  signal(b1_ready)
+end procedure
+
+procedure thread_c:
+// El hilo c espera a que b1 haya terminado
+// por lo que se ejeuta cuando termina a1 y b1
+  wait(b1_ready) 
+  statement c1
+// termina la ejecucion  
+end procedure

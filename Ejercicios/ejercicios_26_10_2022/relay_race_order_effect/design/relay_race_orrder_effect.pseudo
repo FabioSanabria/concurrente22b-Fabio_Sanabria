@@ -1,0 +1,45 @@
+procedure main(argc, argv[]):
+  if argc = 4 then
+    shared team_count := integer(argv[1])
+    shared stage1_delay := integer(argv[2])
+    shared stage2_delay := integer(argv[3])
+    shared position := 0
+
+    shared start_barrier := create_barrier(team_count)
+    shared batons := create_semaphores(team_count, 0)
+    shared finish_mutex := create_mutexes(1)
+
+    for team := 0 to team_count do
+    Here we create thread in a inverse order
+    creating first the last thread and then
+    the first thread
+      create_thread(run_stage1, team)
+      create_thread(run_stage2, team)
+    end for
+  else
+    print "usage: relay_race team_count stage1_delay stage2_delay"
+  end if
+end procedure
+
+procedure run_stage1(team_number):
+  // Wait until all teams are ready
+  wait(start_barrier)
+  // Run the first stage
+  delay(stage1_delay)
+  // Relay the baton to its partner
+  signal(baton[team_number])
+end function
+
+procedure run_stage2(team_number):
+  // Wait until my peer relays the baton to me
+  wait(baton[team_number])
+  // Run the second stage
+  delay(stage2_delay)
+  // Claim our prize
+  wait(finish_mutex)
+    declare constant my_team_position = ++position
+    if my_team_position <= 3 then
+      print('Place ', my_team_position, ': team ', team_number)
+    end if
+  signal(finish_mutex)
+end procedure

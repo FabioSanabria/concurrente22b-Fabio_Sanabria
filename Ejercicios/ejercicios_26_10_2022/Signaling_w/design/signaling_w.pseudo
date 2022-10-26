@@ -1,0 +1,18 @@
+procedure main:
+  declare thread_count := read_integer()
+  shared can_access as array of thread_count semaphores
+  
+  for thread_number := 0 to thread_count do
+    can_greet[thread_number] := create_semaphore(not thread_number)
+    create_thread(secondary, thread_number) // thread team
+  end for
+end procedure
+
+procedure secondary:
+
+wait(can_access[thread_number])
+  statement a
+  // El mod evita que el semaforo final incremente un semaforo
+  // innexistente
+signal(can_access[(thread_number + 1) mod thread_count])  
+end procedure

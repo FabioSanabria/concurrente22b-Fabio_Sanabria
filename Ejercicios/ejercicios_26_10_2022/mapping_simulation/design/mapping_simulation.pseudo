@@ -1,0 +1,70 @@
+procedure  main()
+    create arreglo
+    create arregloDinamico
+    create arregloCiclico
+    
+    thread_count := user_request
+
+    for(int i = 0, i less than thread_cout, i++) do 
+        arreglo[i] := user_request_numbers
+    end
+    
+    serial_time := all the time that the user request
+// FOR Dinamic mapping
+    for (uint64_t i = thread_count; i < arreglo.count; i++) do//
+        time_temp = MAX_NUMBER
+        for (uint64_t z = 0; z < arregloDinamico.count; z++) do        
+            if (arregloDinamico[z] less or equal
+                than time_temp) do
+            index_temp := z
+            time_temp  := arregloDinamico[z]
+            // printf("Hilos tiempos %"PRId64 "\n", time_temp);
+            end
+        end
+        arregloDinamico[index_temp] += arreglo[i]
+    end
+
+    for (uint64_t i = 0; i < arreglo.count; ++i) do
+      if (thread_count less than indice + 1) do
+        indice = 0;
+        i--;
+      end else do
+        arregloCiclico[indice] += arreglo[i];
+        ++indice;
+      end
+    end
+
+    declare shared_data_block
+
+    create_threads_block(shared_data_block, arreglo.count);
+    call Duration()
+    call SpeedUp()
+    call Efficiency()
+    print(Block times with the duration, SpeedUp and
+    Efficiency)
+
+    call Duration()
+    call SpeedUp()
+    call Efficiency()
+    print(Cyclic times with the duration, SpeedUp and
+    Efficiency)
+    
+    call Duration()
+    call SpeedUp()
+    call Efficiency()
+    print(Dinamic times with the duration, SpeedUp and
+    Efficiency)  
+end procedure
+
+procedure create_threads_block 
+for thread_number := 0 para thread_count do 
+    create_thread(asignar_bloque, thread_number)
+end for
+end procedure
+
+procedure asignar_bloque
+    thread_number.inicio_trabajo->formula_mapeo_bloque();
+    thread_number.final_trabajo->formula_mapeo_bloque();
+
+    calculate the time of each thread
+end procedure
