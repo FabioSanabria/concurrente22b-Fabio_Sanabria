@@ -1,0 +1,18 @@
+procedure main
+create thread_count := total_of_CPUs
+
+if (argc bigger or equals than 2) do
+    thread_count := omp_num_of_threads_method(argv[1]);
+end
+
+if (argc bigger or equals than 3) do
+    integer iterator_count := arv[2]
+end
+
+// Aqui el programa elige el mapeo que se va a usar
+#pragma omp parallel for num_threads(thread_count) schedule(runtime) \
+default(none) shared(iteration_count, mapping)
+
+print("Runtime" , mapping)
+end
+end procedure

@@ -1,0 +1,27 @@
+procedure main
+    if argc bigger or equal than 2 do
+        thread_count := atoi(argv[1]);
+    end
+
+    create vector values
+
+    declare values := 0.0
+
+    while (user stops requesting numbers) do
+        save in values the cin given by the user
+        values.add(value)
+    end
+
+    #pragma omp parallel for num_threads(thread_count) schedule(runtime) \
+    default(none) shared(values, sum) 
+    {
+    partial_sum += values[all the numbers]
+
+    #pragma omp critical(can_add)
+    total_sum += my_partial_sum;
+
+
+    declare average := total_sum / values.size()
+    }
+    print(average)
+end procedure

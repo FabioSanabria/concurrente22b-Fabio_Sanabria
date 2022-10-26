@@ -1,0 +1,20 @@
+procedure main
+    if argc bigger or equal than 2 do
+        thread_count := atoi(argv[1]);
+    end
+
+    create vector values
+
+    declare values := 0.0
+
+    while (user stops requesting numbers) do
+        save in values the cin given by the user
+        values.add(value)
+    end
+
+    sum += values[all the numbers]
+
+    declare average := sum / values.size()
+
+    print(average)
+end procedure
