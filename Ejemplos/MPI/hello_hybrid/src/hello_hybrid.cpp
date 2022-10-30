@@ -18,14 +18,14 @@ int main(int argc, char* argv[]) {
     // El numero de proceso/ hilo que esta ejecutando
     // el programa, si solo operamos en una sola zona
     // de trabajo, entonces solo tendremos y procces_count
-    // y por lo tanto, 1 process_number    
+    // y por lo tanto, 1 process_number
     MPI_Comm_rank(MPI_COMM_WORLD, &process_number);
     // Se coloca en -1 para ver si a la hora de
     // imprimir hay algun tipo de error de salida
     int process_count = -1;
     // Guarda en la variable process_count, la cantidad
     // de zonas/ maquinas que estan ejecutando este pro-
-    // grama    
+    // grama
     MPI_Comm_size(MPI_COMM_WORLD, &process_count);
     // Esto lo que hace es que aparte una parte de memoria
     // para poder guardar el nombre de la maquina que esta
@@ -33,10 +33,10 @@ int main(int argc, char* argv[]) {
     // gastar memoria innecesaria
     char process_hostname[MPI_MAX_PROCESSOR_NAME] = { '\0' };
     // Se coloca en -1 para ver si a la hora de
-    // imprimir hay algun tipo de error de salida    
+    // imprimir hay algun tipo de error de salida
     int hostname_length = -1;
     // Obtiene el nombre del procesador que ejecuta el programa
-    // en este caso se llama Fabiosv-VirtualBox    
+    // en este caso se llama Fabiosv-VirtualBox
     MPI_Get_processor_name(process_hostname, &hostname_length);
   // Imprime el mensaje que necesitamos
     std::cout << "Hello from main thread of process " << process_number
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     if (argc == 2) {
     // De lo contrario, si el usuario pide la cantidad
     // de hilos mediante argumento en la linea de comandos,
-    // entonces la guardamos en thread_count  
+    // entonces la guardamos en thread_count
       thread_count = atoi(argv[1]);
     }
     // Usamos directiva de OMP para iniciar con la concurrencia
@@ -64,9 +64,9 @@ int main(int argc, char* argv[]) {
     // Aqui terminan todos los procesos de MPI
     MPI_Finalize();
   } else {
-    // Por si da algun error al inicializar MPI    
+    // Por si da algun error al inicializar MPI
     std::cerr << "error: could not init MPI" << std::endl;
   }
-  // Return del main  
+  // Return del main
   return 0;
 }
