@@ -1,0 +1,19 @@
+procedure main(argc, argv[])
+  // create thread_count as result of converting argv[1] to integer
+  shared const thread_count = integer(argv[1])
+  // Con los hilos obtenidos anteriormente, se
+  // procede a crear los hilos pedidos
+  create_threads(thread_number, greet)
+  // Dice hola desde el hilo principal
+  print "Hello from main thread of process ", process_number, " of " \
+    , process_count," on ", process_hostname
+end procedure
+
+procedure greet(thread_number)
+// Dice hola desde un hilo secundario, tener cuidado
+// con la concurrencia debido a las condiciones de
+// carrera  
+  print "\tHello from thread ", thread_number, " of ", thread_count, \
+    " of process ", process_number, " of ", process_count," on " \
+    , process_hostname
+end procedure

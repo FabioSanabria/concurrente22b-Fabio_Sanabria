@@ -1,0 +1,7 @@
+procedure main(argc, argv[])
+// Lo que se requiere es utilizar MPI, imprimir todos los procesos
+// que se le pide al la maquina host, para ello se debe de inicializar
+// MPI y utilizar las diversas herramientas que este nos provee
+  print "Hello from main thread of process ", process_number, " of " \
+    , process_count, " on ", process_hostname
+end procedure

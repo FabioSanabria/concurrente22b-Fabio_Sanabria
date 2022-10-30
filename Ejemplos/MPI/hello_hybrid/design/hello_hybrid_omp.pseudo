@@ -1,0 +1,17 @@
+procedure main(argc, argv[])
+// Obtenemos la cantidad de hilos mediante
+// linea de comandos
+  shared const thread_count = integer(argv[1])
+  // Hola desde el hilo principal
+  print "Hello from main thread of process ", process_number, " of " \
+    , process_count," on ", process_hostname
+  // Parte paralela
+  parallel do
+    // Dice hola desde hilos secundarios
+    print "\tHello from thread ", thread_number, " of ", thread_count, \
+      " of process ", process_number, " of ", process_count," on " \
+      , process_hostname
+  // Termina la concurrencia    
+  end parallel
+
+end procedure
