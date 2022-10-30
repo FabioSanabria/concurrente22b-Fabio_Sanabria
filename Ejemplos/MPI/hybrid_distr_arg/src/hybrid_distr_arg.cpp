@@ -8,7 +8,7 @@
 // de varios numeros
 #include <algorithm>
 // Este encabezado define varias funciones de propósito general,
-// incluida la gestión de memoria dinámica, la generación de 
+// incluida la gestión de memoria dinámica, la generación de
 // números aleatorios, la comunicación con el entorno, la
 // aritmética de enteros, la búsqueda, la clasificación y la conversión.
 #include <cstdlib>
@@ -43,20 +43,20 @@ int calculate_finish(int rank, int end, int workers, int begin);
 
 int main(int argc, char* argv[]) {
   // Inicializa el ambiente de ejecucion de MPI
-  // para poder utilizar todas sus funciones  
+  // para poder utilizar todas sus funciones
   if (MPI_Init(&argc, &argv) == MPI_SUCCESS) {
     int process_number = -1;  // rank
     // El numero de proceso/ hilo que esta ejecutando
     // el programa, si solo operamos en una sola zona
     // de trabajo, entonces solo tendremos y procces_count
-    // y por lo tanto, 1 process_number  
+    // y por lo tanto, 1 process_number
     MPI_Comm_rank(MPI_COMM_WORLD, &process_number);
     // Se coloca en -1 para ver si a la hora de
     // imprimir hay algun tipo de error de salida
     int process_count = -1;
     // Guarda en la variable process_count, la cantidad
     // de zonas/ maquinas que estan ejecutando este pro-
-    // grama    
+    // grama
     MPI_Comm_size(MPI_COMM_WORLD, &process_count);
     // Esto lo que hace es que aparte una parte de memoria
     // para poder guardar el nombre de la maquina que esta
@@ -64,10 +64,10 @@ int main(int argc, char* argv[]) {
     // gastar memoria innecesaria
     char process_hostname[MPI_MAX_PROCESSOR_NAME];
     // Se coloca en -1 para ver si a la hora de
-    // imprimir hay algun tipo de error de salida       
+    // imprimir hay algun tipo de error de salida
     int hostname_length = -1;
     // Obtiene el nombre del procesador que ejecuta el programa
-    // en este caso se llama Fabiosv-VirtualBox    
+    // en este caso se llama Fabiosv-VirtualBox
     MPI_Get_processor_name(process_hostname, &hostname_length);
     // Obtenemos la cantidad de tareas que va a realizar diversas
     // maquinas, el inicio simboliza la tarea por donde va a empezar
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
       const int process_finish = calculate_finish(process_number, overall_finish
         , process_count, overall_start);
       // La cantidad de procesos que va a realizar un hilo, si empieza desde el
-      // 3 y termina en el 6 entonces realiza 3 procesos  
+      // 3 y termina en el 6 entonces realiza 3 procesos
       const int process_size = process_finish - process_start;
       // En este print nos dice la cantidad de procesos que se van a repartir
       // todos los hilos de ejecucion
