@@ -21,3 +21,6 @@
 ### Fence Parallel
 
 [Link al Fence_Parallel](https://github.com/FabioSanabria/concurrente22b-Fabio_Sanabria/tree/main/Ejercicios/ejercicios_26_10_2022/fence_parallel)
+
+### Chess_vous
+[Link al Chess_vous](https://github.com/FabioSanabria/concurrente22b-Fabio_Sanabria/tree/main/Ejercicios/ejercicios_26_10_2022/chess_vous/design)
