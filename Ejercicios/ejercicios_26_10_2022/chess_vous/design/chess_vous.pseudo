@@ -1,0 +1,74 @@
+procedure main()
+  // Inicializa los semaforos para el
+  // control de concurrencia 
+  shared player1_ready := semaphore(0)
+  shared player2_ready := semaphore(0)
+  shared players_ready := semaphore(0)
+  shared clock_ready := semaphore(0)
+  // Aqui crea a los jugadores
+  create_thread(player1)
+  create_thread(player2)
+  create_thread(referee)
+end procedure
+
+procedure player1()
+  // Aqui dice que jugador 1
+  // esta listo
+  signal(player1_ready)
+  // Aqui va a esperar a que todos
+  // los jugadores esten listos mediante
+  // una señal mandada por el arbitro
+  wait(players_ready)
+  // Aqui entra el arbitro al campo de
+  // de juego  
+  enter_room()
+  // Aqui va a esperar a que el arbitro
+  // mande una señal de que los jugadores
+  // pueden comenzar a jugar
+  wait(clock_ready)
+  // Aqui ejecuta el metodo play_chess  
+  play_chess()
+end procedure
+
+procedure player2()
+  // Aqui dice que jugador 2
+  // esta listo
+  signal(player2_ready)
+  wait(players_ready)
+  // Aqui entra el arbitro al campo de
+  // de juego
+  enter_room()
+  // Aqui va a esperar a que el arbitro
+  // mande una señal de que los jugadores
+  // pueden comenzar a jugar
+  wait(clock_ready)
+  // Aqui ejecuta el metodo play_chess
+  play_chess()
+end procedure
+
+procedure referee()
+  // Aqui va a esperar a que
+  // el jugador1 este listo
+  wait(player1_ready)
+  // Aqui va a esperar a que
+  // el jugador2 este listo  
+  wait(player2_ready)
+  // El arbitro dice que los jugadores
+  // estan listos entonces les manda
+  // una señal a cada uno para que pueda
+  // entrar al cuarto ya que como los
+  // 2 juagores hicieron wait dejaron
+  // el semaforo en -2 entonces hay que
+  // dejarlo en 0
+  signal(players_ready)
+  signal(players_ready)
+  // Aqui entra el arbitro al campo de
+  // de juego
+  enter_room()
+  set_clock()
+  // Aqui le manda una doble señal a los
+  // jugadores para que puedan jugar
+  // ajedrez
+  signal(clock_ready)
+  signal(clock_ready)
+end procedure
