@@ -38,7 +38,7 @@ void serial_odd_even_sort(size_t n, double arr[]) {
 void printArray(double arr[], int n) {
     for (int i = 0; i < n; i++) {
         if (i == n - 1) {
-          std::cout << arr[i] << "\n";     
+          std::cout << arr[i] << "\n";
         } else {
           std::cout << arr[i] << ", ";
         }
