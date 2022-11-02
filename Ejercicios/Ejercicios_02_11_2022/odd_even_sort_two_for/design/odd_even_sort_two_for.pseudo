@@ -1,0 +1,36 @@
+procedure main
+    declare n : = 0
+    declare array[n]
+
+    for (i = 0; i less than n; i increment) do 
+        array[i] := random_number
+    end for
+
+    call serial_odd_even_sort(n, array)
+    // Clasic method of printing an array    
+    call printArray(n, array)
+end procedure
+
+procedure serial_odd_even_sort
+    parameter n  // is the size of the array
+    parameter array  // the array
+    parameter thread_count
+    #parallel omp 
+    for (phase = 0; phase less than n; phase increment) do 
+        if (phase mod 2 == 0) {
+            #for omp 
+            for (i = 1; i less or equal than n - 2; i = i + 2) do 
+                if (array[i] less than array[i + 1]) do
+                    swap elements array[i] and array[i + 1]
+                end
+            end for
+        } else {
+            #for omp
+            for (i = 0; i less or equal than n - 2; i = i + 2) do 
+                if (array[i] less than array[i + 1]) do
+                    swap elements array[i] and array[i + 1]
+                end
+            end for
+        }  
+    end for
+end procedure
