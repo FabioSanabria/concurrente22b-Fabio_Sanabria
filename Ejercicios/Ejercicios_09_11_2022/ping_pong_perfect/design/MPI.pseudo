@@ -1,0 +1,23 @@
+create class MPI {
+
+    MPI_constructor() do
+        inicializa todos los procesos
+        relacionados con mpi como el MPI_init,
+        COMM_RANK, etc
+    end procedure
+
+    MPI_Destructor() = empty
+    
+    procedure getProcessNumber() do
+        return process_number
+    end procedure
+
+    procedure getProcessCount() do
+        return process_count
+    end procedure
+
+    procedure getHostname() do
+        return hostname
+    end procedure
+}
+end class

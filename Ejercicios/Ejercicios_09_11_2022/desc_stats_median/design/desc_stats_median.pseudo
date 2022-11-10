@@ -1,0 +1,82 @@
+procedure main
+declare vector
+declare thread_count
+    if argc == 2 do
+        thread_count := argv[1]
+    end if
+
+    while used dont ctrl + d
+        vector := numbers
+    end while
+
+    call ordenamiento();
+
+    index := (array.size() / 2) - 1
+    mediana := array[index]
+    
+    print(call minimo() ,call maximo() .call promedio()
+    ,call desviacionS(), mediana)
+    
+end procedure
+
+
+procedure minimo
+    #parallel for
+    declare min
+
+    for i < vector.size() do 
+        if vector[i] < min do
+            min := vector[i]
+        end if
+    end for
+end procedure
+
+procedure maximo
+    #parallel for
+    declare max
+
+    for i < vector.size() do 
+        if vector[i] > max do
+            max := vector[i]
+        end if
+    end for
+end procedure
+
+procedure promedio
+    #parallel for with reduction 
+    sum += values[all the numbers]
+
+    declare average := sum / values.size()
+end procedure
+
+procedure desviacionS
+    #parallel for with reduction 
+    sum += (values[all the numbers] - average)^ 2
+
+    declare desviacion := sum / values.size()
+    desviacion := sqrt(desviacion)
+end procedure
+
+procedure ordenamiento 
+parameter n  // is the size of the array
+parameter array  // the array
+parameter thread_count
+#parallel omp 
+for (phase = 0; phase less than n; phase increment) do 
+    if (phase mod 2 == 0) {
+        #for omp 
+        for (i = 1; i less or equal than n - 2; i = i + 2) do 
+            if (array[i] less than array[i + 1]) do
+                swap elements array[i] and array[i + 1]
+            end
+        end for
+    } else {
+        #for omp
+        for (i = 0; i less or equal than n - 2; i = i + 2) do 
+            if (array[i] less than array[i + 1]) do
+                swap elements array[i] and array[i + 1]
+            end
+        end for
+    }  
+end for
+end procedure
