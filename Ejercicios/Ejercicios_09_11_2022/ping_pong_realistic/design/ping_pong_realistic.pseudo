@@ -1,0 +1,53 @@
+procedure  main do
+    declare luck_player_1
+    declare luck_player_2
+    Inicializa MPI y todos sus procesos
+    
+    if argc equals 3 do
+        luck_player_1 := argv[1]
+        luck_player_2 := argv[2]
+    end if
+end procedure
+
+procedure simulate_ping_pong do
+    if process_number equals 1 do
+        if random_number is smaller than luck_player_1 do
+            increase points_player_1
+            send(points_player_1)
+            receive(points_player_2)
+            else do
+                send(points_player_1)
+                receive(points_player_2)             
+            end
+        end if
+    end if
+    else do 
+        if process_number equals 0 do 
+            if random_number is smaller than luck_player_2 do
+                iterate 30 times do
+                    increase points_player_2
+                    send(points_player_2)
+                    receive(points_player_1)
+                    print("2. " , points_1)
+                end iterate
+                else do
+                    iterate 30 times do
+                        send(points_player_2)
+                        receive(points_player_1)        
+                    end iterate
+                    print("1. " , points_1)
+                end else
+            end if
+        end if
+    end
+end procedure
+
+procedure searchWiner do 
+    if points_1 is smaller than points_2
+        print("Jugador 2 ha ganado")
+    if points_2 is smaller than points_1
+        print("Jugador 1 ha ganada")
+    else do
+        print("Empate")
+    end     
+end

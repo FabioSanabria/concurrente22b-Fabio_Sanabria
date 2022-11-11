@@ -1,6 +1,14 @@
 // Copyright 2021 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr> CC-BY 4.0
 // Already seen
 #include <mpi.h>
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <inttypes.h>
+
 // Already seen
 #include <cstdlib>
 // Already seen
@@ -20,17 +28,17 @@
 const size_t MESSAGE_CAPACITY = 512;
 
 /**
- * @brief Manda al programa a saludar una cantidad de veces
- * solicitadas por el usuario, a diferencia del anterior programa
- * este utiliza un control de concurrencia diferente y es el
- * conditional safe ya que cada elemento va guardando su saludo
- * en diferentes partes de la memoria para luego ser desplegadas
+ * @brief 
  * @param process_number Numero del proceso que va a saludar
- * @param process_count Cantidad de procesos que van a saludar
- * @param process_hostname Maquina por donde se saluda
+ * @param luck_player_1 La suerte que tiene el jugador 1 al lanzar
+ * la bola, es decir, el indice de exito
+ * @param luck_player_1 La suerte que tiene el jugador 1 al lanzar
+ * la bola, es decir, el indice de exito
  * @return void
  */
-void simulate_ping_pong(int process_number, int process_count, const char* process_hostname);
+void simulate_ping_pong(int process_number);
+
+void searchWiner(int points_1, int points_2);
 
 int main(int argc, char* argv[]) {
   int error = EXIT_SUCCESS;
@@ -65,9 +73,15 @@ int main(int argc, char* argv[]) {
     // Aqui llama a la subrutina greet para que todos los hilos
     // saluden, se utiliza un "semaforo" para lograr este
     // cometido
+
     try {
     // Metodo greet
-      simulate_ping_pong(process_number, process_count, process_hostname);
+    if (process_count != 2 || process_count == 1) {
+      if (process_number == 0)
+      throw std::runtime_error("Deben ser solo 2 jugadores");
+      return EXIT_FAILURE;
+    }
+      simulate_ping_pong(process_number);
     } catch (const std::runtime_error& exception) {
       // Aqui entra si hay algun tipo de problema a la
       // hora de saludar
@@ -83,66 +97,71 @@ int main(int argc, char* argv[]) {
   return error;
 }
 
-void simulate_ping_pong(int process_number, int process_count
-    , const char* process_hostname) {
-  // Aqui se crea el buffer que va a encargarse de
-  // "guardar" los mensajes de los hilos para ser
-  // desplegados luego
-  std::stringstream buffer;
-  // Aqui se le dice al buffer que se le meta el saludo
-  // del hilo que acaba de entrar
-  buffer << "Jugador  " << process_number
-    << " lanzo la pelota al jugador 2 \n";
-  // Si el proceso es diferente de 1 entonces se hace un send
-  // para enviar la cadena/ saludo del hilo y guardarlo en una
-  // variable locan dentro del ciclo de recv
-  if (process_number != 0) {
-    // Aqui se crea una variable local que va a contener la cadena
-    // del hilo que entra en ese momento
-    const std::string& message = buffer.str();
-    // Aqui se le envia el mensaje/saludo al recv para  que lo imprima en
-    // orden en el ciclo de abajo, en otras palabras en recv contiene el
-    // saludo y si el indice es el correcto, este mete el saludo en una
-    // variable y la despliega
-    if (MPI_Send(message.data(), message.length(), MPI_CHAR, /*target*/ 0
+void simulate_ping_pong(int process_number) {
+  int puntos_totales_1 = 0;
+  int puntos_totales_2 = 0;
+  if (process_number == 1) {
+  int puntos = 0;  // Los puntos del jugador 1
+  int puntos_recv = 0;  // Los puntos del jugador 2 que manda jugador 1
+  int puntos_2 = 0;  // los puntos del jugador 2 locales
+  for (int i = 0; i < 30; i++) {
+    ++puntos;
+    if (MPI_Send(&puntos, 1, MPI_INT, /*target*/ 0
       , /*tag*/ 0, MPI_COMM_WORLD) != MPI_SUCCESS) {
       // Mensaje por si falla
       fail("could not send message");
     }
-
-    // std::vector<char> message2(MESSAGE_CAPACITY);
-    
-    // if (MPI_Recv(&message2[0], MESSAGE_CAPACITY, MPI_CHAR, 0
-    //     , /*tag*/ 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE) != MPI_SUCCESS ) {
-    //     fail("could not receive message");
-    // }
-
-    // std::cout << message2[0] << std::endl;
-    
+    if (MPI_Recv(&puntos_recv, 1, MPI_INT, 0
+      , /*tag*/0, MPI_COMM_WORLD, MPI_STATUS_IGNORE) != MPI_SUCCESS ) {
+      fail("could not receive message");
+    }
+  }
+      puntos_2 = puntos_recv;
+      puntos_totales_2 = puntos_2;
+      std::cout <<"2. " << puntos_2 << std::endl;
+      if (MPI_Send(&puntos_totales_2, 1, MPI_INT, /*target*/ 0
+        , /*tag*/ 0, MPI_COMM_WORLD) != MPI_SUCCESS) {
+        // Mensaje por si falla
+        fail("could not send message");
+      }
   } else {
+    if (process_number == 0) {
     // Ciclo que se utiliza para imprimir los datos
+    int puntos = 0;  // LOs puntos del jugador 2
+    int puntos_recv = 0;  // Los puntos del jugaror 1 enviados por 2
+    int puntos_1 = 0;  // Variable que guarda los puntos del jugador 1
+      for (int i = 0; i < 30; i++) {
+        ++puntos;
+        if (MPI_Recv(&puntos_recv, 1, MPI_INT, 1
+          , /*tag*/ 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE) != MPI_SUCCESS ) {
+          fail("could not receive message");
+        }
+        puntos_1 = puntos_recv;
+        if (MPI_Send(&puntos, 1 , MPI_INT, /*target*/ 1
+        , /*tag*/ 0, MPI_COMM_WORLD) != MPI_SUCCESS) {
+          // Mensaje por si falla
+          fail("could not send message");
+        }
+        puntos_1 = puntos_recv;
+      }
+      puntos_totales_1 = puntos_1;
+      std::cout <<"1. " << puntos_1 << std::endl;
 
-      std::vector<char> message(MESSAGE_CAPACITY);
-      if (MPI_Recv(&message[0], MESSAGE_CAPACITY, MPI_CHAR, 1
+      if (MPI_Recv(&puntos_recv, 1, MPI_INT, 1
         , /*tag*/ 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE) != MPI_SUCCESS ) {
         fail("could not receive message");
       }
-      // Aqui imprime el mensaje de uno de los procesos
-      std::cout << &message[0] << std::endl;
-      std::cout << "Jugador 2 recibio la pelota y la lanzo al jugador " << process_count -1
-      << std::endl;
+      searchWiner(puntos_totales_1, puntos_recv);
+    }
+  }
+}
 
-
-  std::stringstream buffer;
-
-  buffer << "Jugador  " << process_number
-    << " lanzo la pelota al jugador 1 y la recibe \n";
-
-      // const std::string& message2 = buffer.str();
-      // if (MPI_Send(message2.data(), message2.length(), MPI_CHAR, /*target*/ 0
-      //   , /*tag*/ 0, MPI_COMM_WORLD) != MPI_SUCCESS) {
-      //   // Mensaje por si falla
-      //   fail("could not send message");
-      // }
+void searchWiner(int points_1, int points_2) {
+  if (points_1 < points_2) {
+    std::cout << "EL jugador 2 ha ganado!" << std::endl;
+  } else if (points_2 < points_1) {
+    std::cout << "El jugador 1 ha ganado!" << std::endl;
+  } else {
+    std::cout << "Los jugadores han empatado!" << std::endl;
   }
 }
