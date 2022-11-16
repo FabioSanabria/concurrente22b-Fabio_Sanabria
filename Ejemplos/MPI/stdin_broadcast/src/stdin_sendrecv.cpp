@@ -118,7 +118,9 @@ void process_values(int process_number, const char* process_hostname) {
   }
   // Resize del vector para evitar malentendidos
   values.resize(value_count);
-  // Broadcast para
+  // Broadcast para recibir los mensajes en conjunto, se sabe que
+  // la raiz es 0 pero no se necesita saber el source ya que va
+  // destinado a todos los procesos presentes
   if (MPI_Bcast(&values[0], value_count, MPI_DOUBLE, /*root*/ 0
     , MPI_COMM_WORLD) != MPI_SUCCESS ) {
     fail("could not broadcast values");
