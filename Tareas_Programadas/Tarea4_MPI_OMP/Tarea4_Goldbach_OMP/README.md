@@ -1,6 +1,6 @@
-[comment]: <> (Goldbach_pthread readme v1.4 Fabio Sanabria Valerin <fabio.sanabria@ucr.ac.cr>)
+[comment]: <> (Goldbach_pthread readme v1.5 Fabio Sanabria Valerin <fabio.sanabria@ucr.ac.cr>)
 
-# Tarea 3
+# Tarea 4 (OMP)
 
 ## Problema a resolver  
 
