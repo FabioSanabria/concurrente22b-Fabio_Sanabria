@@ -1,0 +1,91 @@
+// Goldbach_pthread pseudo codigo v1.3 Fabio Sanabria Valerin
+<fabio.sanabria@ucr.ac,cr>
+procedure main(argc,argv[])
+    MPI init all the process
+    
+    thread_count := integer(argv[1])
+    for thread_number := 0 para thread_count do 
+        create_thread(greet, thread_number)
+end for
+    correr golbach
+    llamar al destructor
+    
+end procedure
+
+procedure recibir_datos(datos)
+    array numeros
+    if (datos correctos) do
+        guardar datos en array
+    end if else do
+        print "Se ha digitado un dato erroneo"
+    end else
+    return numeros
+    
+end procedure
+
+procedure calcular_primos(recibir_datos())
+    array primos
+    if (numero>5) do
+        for (i=0;i<numero;i++) do
+            calcular numeros primos
+            llenar array primos
+        end for
+        
+    end if
+    return primos
+end procedure
+
+procedure create_thread(datos)
+    parallel for dynamic do 
+        create_threads
+        call calcular_sumas()      
+    end
+end procedure
+
+
+procedure calcular_sumas(calcular_primos(), numero)
+    array sumas
+    if (numero par) do
+        calcular sumas conjetura fuerte
+        llenar array sumas
+    end if else do
+        calcular sumas conjetura debil
+        llenar array sumas
+    end else
+    return sumas
+end procedure
+
+procedure cantidad_sumas(calcular_sumas())
+    array cantidad
+    int cant_sum++
+    for (i=0;i<tamano calcular_sumas();i++) do
+        for (j=0;j<tamano calcular_sumas()[i];j++) do
+            cant_sum++
+            send(sumas)
+        end for
+        cantidad[i] = j
+    end for
+    return cantidad
+end procedure
+
+procedure imprimir_sumas(goldbach)
+    mientras haya elementos en golbach
+    recieve(sumas)
+    get sumas to print them
+    if(positivo) do
+        si es par 
+            se imprimen solo numero y cantidad de sumas
+            mov+2 espacios del array sumas
+        si es impar
+            se imprimen solo numero y cantidad de sumas
+            mov+3 espacios del array sumas
+    end if
+    else do
+        si es par 
+            se imprimen numero, cantidad de sumas y sumas
+            mov+2 espacios del array sumas
+        si es impar
+            se imprimen numero, cantidad de sumas y sumas
+            mov+3 espacios del array sumas
+    end else
+end procedure
