@@ -6,4 +6,4 @@ Segunda Tarea: Goldbach_Pthreads
 
 Tercera Tarea: Goldbach_Optimization
 
-Cuarta Tarea: Por definir
+Cuarta Tarea: Goldbach_MPI_OMP
