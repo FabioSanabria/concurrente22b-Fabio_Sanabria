@@ -5,13 +5,13 @@
 ## Problema a resolver  
 
 Se pretende encontrar las distintas *sumas de Goldbach* utilizando distribución de hilos para los diferentes números enteros mayores a 5 ingresados por medio de *la entrada estandar* en el programa, de manera que cada hilo que sea creado se encargará de procesar cada uno de los números ingresados, estos se mostrarán en la *salida estandar* seguido de la cantidad de *sumas de Goldbach* que existen para dicho número. 
-Para este fin se hará uso de *mapeo dinámico* para distribuir la carga entre hilos. La estructura de este programa es muy parecida a la tarea 2 solo que se le modificaron los metodos de las sumas y la busqueda de primos para poder optimizar el maximo posible
+Para este fin se hará uso de la libreria OpenMP para distribuir la carga entre hilos sin necesidad de preocuparse por crear manualmente los hilos y asignarles el trabajo. Esta tecnologia tiene la particularidad de que puede ahorrar muchas lineas de codigo en unas cuantas lineas, no obstante, no es tan eficiente en comparacion a la tecnologia de pthreads vista anteriormente debido a varias causas explicadas dentro del reporte de esta tarea.
 
 En caso de que el número ingresado posea un signo de menos adelante (-),el programa lo interpretará como **la solicitud de mostrar en lista todas las sumas del número positivo correspondiente**.
 
 ## Manual de uso  
 
-Para poder compilar el programa desde la terminal de linux, debe primero abrir una terminal, después de esto debe colocar el comando *cd* seguido del nombre de la carpeta donde se encuentra el programa guardado:  
+Para poder compilar el programa desde la terminal de linux, debe primero abrir una terminal, después de esto debe colocar el comando *cd* seguido del nombre de la carpeta donde se encuentra el programa guardado:
 
 ![Marcado 1](./images/compilar_goldbach.png)
 
@@ -67,18 +67,18 @@ Una vez colocado en la carpeta correspondiente, si desea obtener las *sumas de G
 
     Si desea ingresar una lista primero debe colocar el numero de hilos, luego, debe de escribir el comando de compilación seguido de *"<"* y acontinuación el nombre del archivo con terminación *txt*, de esta manera el programa podrá empezar a procesar el archivo que usted desea:
 
-        ./bin/goldbach_optimization 5 < ./test/test-small/input001.txt
+        ./bin/goldbach_OMP 5 < ./test/test-small/input001.txt
 
 6. Inicializar el programa para su uso:
 
     Después de haber leído y tomado en cuenta todo lo anterior, se pude compilar y empezar a correr el programa utilizando las siguientes líneas de código desde la terminal:
 
         make
-        ./bin/goldbach_optimization 8
+        ./bin/goldbach_OMP 8
 
 7. Si desea utilizar las pruebas de caja negra lo que debe de agregar es el siguiente comando:
         
-        ./bin/goldbach_optimization 8 < test/test-medium/input020.txt
+        ./bin/goldbach_OMP 8 < test/test-medium/input020.txt
 
 ## Créditos 
 
