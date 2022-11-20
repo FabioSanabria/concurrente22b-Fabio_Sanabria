@@ -10,85 +10,78 @@ end for
     
 end procedure
 
-procedure repartir_sumas(thread_number)
-    declare local_pos
-    while true do 
-        local_pos := shared pos
-        shared pos++
-        mutex.lock()
-        if pos >= cant_of_numbers
-            mutex.unlock()
-            break
-        else do 
-            call calcular_sumas();
-        end    
-    end
-end procedure
-
 procedure recibir_datos(datos)
     array numeros
-    if (datos correctos) {
+    if (datos correctos) do
         guardar datos en array
-    } else {
+    end if else do
         print "Se ha digitado un dato erroneo"
-    }
+    end else
     return numeros
     
 end procedure
 
 procedure calcular_primos(recibir_datos())
     array primos
-    if (numero>5) {
-        for (i=0;i<numero;i++) {
+    if (numero>5) do
+        for (i=0;i<numero;i++) do
             calcular numeros primos
             llenar array primos
-        }
+        end for
         
-    }
+    end if
     return primos
 end procedure
+
+procedure create_thread(datos)
+    parallel for dynamic do 
+        create_threads
+        call calcular_sumas()      
+    end
+end procedure
+
 
 procedure calcular_sumas(calcular_primos(), numero)
     array sumas
     
-    if (numero par) {
+    if (numero par) do
         calcular sumas conjetura fuerte
         llenar array sumas
-    } else {
+    end if else do
         calcular sumas conjetura debil
         llenar array sumas
-    }
+    end else
     return sumas
 end procedure
 
 procedure cantidad_sumas(calcular_sumas())
     array cantidad
     int cant_sum++
-    for (i=0;i<tamano calcular_sumas();i++) {
-        for (j=0;j<tamano calcular_sumas()[i];j++) {
+    for (i=0;i<tamano calcular_sumas();i++) do
+        for (j=0;j<tamano calcular_sumas()[i];j++) do
             cant_sum++
-        }
+        end for
         cantidad[i] = j
-    }
+    end for
     return cantidad
 end procedure
 
 procedure imprimir_sumas(goldbach)
     mientras haya elementos en golbach
-    if(positivo){
+    if(positivo) do
         si es par 
             se imprimen solo numero y cantidad de sumas
             mov+2 espacios del array sumas
         si es impar
             se imprimen solo numero y cantidad de sumas
             mov+3 espacios del array sumas
-    }
-    }else {
+    end if
+    else do
         si es par 
             se imprimen numero, cantidad de sumas y sumas
             mov+2 espacios del array sumas
         si es impar
             se imprimen numero, cantidad de sumas y sumas
             mov+3 espacios del array sumas
-    }
+    end else
 end procedure
