@@ -34,7 +34,7 @@ El diagrama es el mismo que el de la tarea pasada solo que tiene una diferencia 
 
 ## Pseudo Código
 
-[goldbach_optimization pseudo codigo](/design/goldbach_MPI.pseudo)
+[goldbach_optimization pseudo codigo](goldbach_MPI.pseudo)
 
 ## Reporte
 
