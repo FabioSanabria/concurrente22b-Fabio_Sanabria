@@ -1,0 +1,29 @@
+procedure main do 
+  Create a global mist object
+  
+  create threads and threads call
+  the procedure run
+
+  Join all the threads
+end procedure
+
+procedure run do
+  print("Before mist ", thread_number)
+  sleep(thread_number)
+
+  call mistery
+
+  print("After mist ", thread_number)
+end
+
+procedure mistery do
+  mutex.lock()
+  increase by 1 the counter
+
+  if counter less than max do 
+    conditional_wait()
+  end if else do
+    conditional_broadcast()
+  end
+  mutex.unlock()
+end

@@ -1,0 +1,51 @@
+procedure main(argc, argv[]):
+  shared chopsticks[] := create_semaphores(5, 1)
+
+  for id := 0 to 5 do
+    create_thread(philosopher, id)
+  end for
+end procedure
+
+procedure philosopher(id):
+  while true do
+    think()
+    // El metodo de aqui es que hace
+    // a los filosofios pares diestros
+    // y a los impares zurdos para que
+    // llegue el momento en el que uno de
+    // ellos sea mas rapido y pueda agarrar
+    // el palillo del otro. ej: el hilo 0 agarra
+    // el palillo derecho y el hilo n-1 intenta agarrar
+    // el palillo que tiene sujerado 0 por lo que el
+    // 4 espera y el hilo 1 y el hilo 0 intentan pelear
+    // por ver quien es el mas rapido y agarra el palillo
+    // libre, si lo agarra 0, entonces 0 come y si no
+    // 1 come
+    if id % 2 = 0 then
+      get_right_chopstick(id)
+      get_left_chopstick(id)
+    else
+      get_left_chopstick(id)
+      get_right_chopstick(id)
+    end if
+    eat()
+    put_left_chopstick(id)
+    put_right_chopstick(id)
+  end while
+end procedure
+
+procedure get_left_chopstick(id):
+  wait(chopsticks[(id + 1) mod 5])
+end procedure
+
+procedure get_right_chopstick(id):
+  wait(chopsticks[id])
+end procedure
+
+procedure put_left_chopstick(id):
+  signal(chopsticks[(id + 1) mod 5])
+end procedure
+
+procedure put_right_chopstick(id):
+  signal(chopsticks[id])
+end procedure

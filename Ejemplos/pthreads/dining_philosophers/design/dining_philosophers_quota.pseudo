@@ -1,0 +1,42 @@
+procedure main(argc, argv[]):
+  shared chopsticks[] := create_semaphores(5, 1)
+  shared quota := create_semaphore(4)
+
+  for id := 0 to 5 do
+    create_thread(philosopher, id)
+  end for
+end procedure
+
+procedure philosopher(id):
+  while true do
+    think()
+    // lo que hace esta parte es que vayan
+    // pasando los filosofos 1 por 1 agarrando
+    // los palillos y siempre el que llega de ultimo
+    // se debe de abstener y esperar a que termine
+    // algun filosofo cerca de el para poder comer
+    wait(quota)
+      get_left_chopstick(id)
+      get_right_chopstick(id)
+      eat()
+      put_left_chopstick(id)
+      put_right_chopstick(id)
+    signal(quota)
+  end while
+end procedure
+
+procedure get_left_chopstick(id):
+  wait(chopsticks[(id + 1) mod 5])
+end procedure
+
+procedure get_right_chopstick(id):
+  wait(chopsticks[id])
+end procedure
+
+procedure put_left_chopstick(id):
+  signal(chopsticks[(id + 1) mod 5])
+end procedure
+
+procedure put_right_chopstick(id):
+  signal(chopsticks[id])
+end procedure
