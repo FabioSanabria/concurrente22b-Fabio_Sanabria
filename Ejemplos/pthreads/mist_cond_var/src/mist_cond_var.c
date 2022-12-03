@@ -1,3 +1,5 @@
+// Copyright 2022 Jeisson Hidalgo <jeisson.hidalgo@ucr.ac.cr>
+
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,8 +20,8 @@ typedef struct {
   pthread_mutex_t mutex;
   /// Este es un nuevo mecanismo de concurrencia,
   /// es un dispositivo de sincronización que permite que los subprocesos
-  /// suspendan la ejecución y renuncien a los procesadores hasta que se satisfaga
-  /// algún predicado sobre los datos compartidos
+  /// suspendan la ejecución y renuncien a los procesadores hasta que se
+  /// satisfaga algún predicado sobre los datos compartidos
   pthread_cond_t cond_var;
 } mist_t;
 
