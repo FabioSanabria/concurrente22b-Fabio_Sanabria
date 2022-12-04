@@ -1,6 +1,6 @@
 ### Ejemplo de prod_cons_unbound
 
-## Codigo del tema 11 y 12
+## Codigo del tema 10, 11 y 12
 
 Modifique la simulación del problema **productor-consumidor** generalizando las siguientes restricciones.
 
